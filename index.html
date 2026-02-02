@@ -41,7 +41,7 @@
 
     nav a {
       color: #fff;
-      margin-left: 12px;
+      margin-right: 12px;
       text-decoration: none;
     }
 
@@ -130,19 +130,27 @@
     </p>
   </section>
 
-  <section id="komentarze">
-    <h2>💬 Komentarze (wkrótce)</h2>
-    <p>
-      Tu pojawi się system komentarzy z logowaniem.
-    </p>
-  </section>
-
   <footer>
     © 2026 Wszechstronni • Społeczność wiedzy
   </footer>
 
-  <!-- 🔥 FIREBASE -->
+  <!-- 🔥 FIREBASE – tylko podpięcie, bez logiki -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore }
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBTmZsAJxKiQozFIQ_D2YCyMV1M0fW1HOk",
+      authDomain: "wszechstronni-3ae34.firebaseapp.com",
+      projectId: "wszechstronni-3ae34",
+      storageBucket: "wszechstronni-3ae34.firebasestorage.app",
+      messagingSenderId: "70890327478",
+      appId: "1:70890327478:web:e576e2078c89ee4a180517"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    console.log("🔥 Firebase podłączony poprawnie");
+  </script>
+  <!-- 🔥 /FIREBASE -->
+
+</body>
+</html>
