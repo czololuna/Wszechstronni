@@ -1,25 +1,145 @@
-<!DOCTYPE html>
+
+  <!DOCTYPE html>
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <title>Wszechstronni</title>
+  <title>Wszechstronni – Nauka • Zabawa • Udział • Zarobek</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #ffffff;
+      background: radial-gradient(circle at top, #2b1055, #000000 70%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .stars {
+      position: fixed;
+      inset: 0;
+      background: url("https://raw.githubusercontent.com/VincentGarreau/particles.js/master/demo/media/star.png");
+      opacity: 0.25;
+      z-index: -1;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(20, 10, 40, 0.7);
+      backdrop-filter: blur(8px);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav a {
+      color: #fff;
+      margin-right: 14px;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    header {
+      text-align: center;
+      padding: 80px 20px 40px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    .tagline {
+      font-size: 1.2rem;
+      opacity: 0.85;
+    }
+
+    section {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 24px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 18px;
+      backdrop-filter: blur(6px);
+    }
+
+    h2 {
+      color: #9ad0ff;
+      margin-top: 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 0.9rem;
+      opacity: 0.6;
+    }
+  </style>
 </head>
 
 <body>
 
-  <h1>Wszechstronni</h1>
+  <div class="stars"></div>
 
-  <p>
-    Wszechstronni to strona, która powstała z myślą o tym,
-    aby każdy miał realną szansę nauczyć się zarabiać w internecie,
-    nawet jeśli zaczyna od zera.
-  </p>
+  <nav>
+    <strong>🌌 Wszechstronni</strong>
+    <div>
+      <a href="#o-co-chodzi">O co chodzi</a>
+      <a href="#co-znajdziesz">Co znajdziesz</a>
+      <a href="#dla-kogo">Dla kogo</a>
+    </div>
+  </nav>
 
-  <p>
-    To przestrzeń do nauki, testowania pomysłów
-    i wspólnego rozwoju — tworzona przez osoby,
-    które same są w drodze.
-  </p>
+  <header>
+    <h1>Wszechstronni</h1>
+    <div class="tagline">
+      Nauka • Zabawa • Udział • Zarobek
+    </div>
+  </header>
+
+  <section id="o-co-chodzi">
+    <h2>🌌 O co chodzi?</h2>
+    <p>
+      Wszechstronni to przestrzeń, która powstała z myślą o tym,
+      aby każdy miał realną możliwość nauczyć się zarabiać w internecie —
+      niezależnie od tego, czy zaczyna od zera.
+    </p>
+    <p>
+      To miejsce do nauki, testowania pomysłów i wspólnego rozwoju.
+      Tworzone przez ludzi, którzy sami są w drodze i uczą się na własnych doświadczeniach.
+    </p>
+  </section>
+
+  <section id="co-znajdziesz">
+    <h2>🚀 Co tu znajdziesz?</h2>
+    <ul>
+      <li>praktyczną naukę krok po kroku</li>
+      <li>realne pomysły na zarabianie</li>
+      <li>dzielenie się doświadczeniem bez ściemy</li>
+      <li>społeczność ludzi, którzy chcą więcej</li>
+    </ul>
+  </section>
+
+  <section id="dla-kogo">
+    <h2>🧭 Dla kogo?</h2>
+    <p>
+      Dla początkujących. Dla ambitnych.  
+      Dla tych, którzy chcą zrozumieć, a nie tylko kopiować.
+    </p>
+  </section>
+
+  <footer>
+    © Wszechstronni — droga przez naukę, nie skróty
+  </footer>
 
 </body>
 </html>
