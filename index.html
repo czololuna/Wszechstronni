@@ -40,13 +40,9 @@
     }
 
     nav a {
+      color: #fff;
       margin-left: 12px;
-      color: #ffffff;
       text-decoration: none;
-    }
-
-    nav a:hover {
-      text-shadow: 0 0 8px #a88bff;
     }
 
     header {
@@ -134,9 +130,19 @@
     </p>
   </section>
 
+  <section id="komentarze">
+    <h2>💬 Komentarze (wkrótce)</h2>
+    <p>
+      Tu pojawi się system komentarzy z logowaniem.
+    </p>
+  </section>
+
   <footer>
     © 2026 Wszechstronni • Społeczność wiedzy
   </footer>
 
-</body>
-</html>
+  <!-- 🔥 FIREBASE -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore }
