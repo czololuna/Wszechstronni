@@ -19,7 +19,7 @@ body{
   overflow-x: hidden;
 }
 
-/* GWIAZDY – warstwa tła */
+/* GWIAZDY */
 .stars{
   position: fixed;
   inset: 0;
@@ -30,7 +30,6 @@ body{
   animation: starsMove 60s linear infinite, starsTwinkle 4s ease-in-out infinite;
 }
 
-/* Animacje gwiazd */
 @keyframes starsMove {
   0% { background-position: 0 0; }
   100% { background-position: -500px 1000px; }
@@ -41,7 +40,7 @@ body{
   50% { opacity: 0.28; }
 }
 
-/* Nawigacja */
+/* NAV */
 nav{
   position: sticky;
   top: 0;
@@ -88,7 +87,7 @@ h1{
   margin-top: 10px;
 }
 
-/* PANELE */
+/* PANELS */
 .panel{
   max-width: var(--container-max);
   margin: 40px auto;
@@ -114,7 +113,7 @@ h2{
   border-bottom: 1px solid rgba(255,255,255,0.15);
 }
 
-/* STOPKA */
+/* FOOTER */
 .site-footer{
   text-align: center;
   padding: 30px;
@@ -122,7 +121,7 @@ h2{
   opacity: 0.6;
 }
 
-/* RESPONSYWNOŚĆ */
+/* RESPONSIVE */
 @media (max-width: 600px){
   .hero{ padding: 40px 12px 20px; }
   h1{ font-size: 2rem; }
