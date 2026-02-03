@@ -1,97 +1,71 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wszechstronni – Nauka • Zabawa • Udział • Zarobek</title>
-  <link rel="stylesheet" href="styl.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wszechstronni</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <div class="stars" aria-hidden="true"></div>
 
-  <nav>
-    <strong class="brand">🌌 Wszechstronni</strong>
-    <div class="nav-links">
-      <a href="#o-co-chodzi">O co chodzi</a>
-      <a href="#co-znajdziesz">Co znajdziesz</a>
-      <a href="#dla-kogo">Dla kogo</a>
-      <a href="#komentarze">Komentarze</a>
-    </div>
-  </nav>
+    <!-- GWIAZDY -->
+    <div class="stars"></div>
 
-  <header class="hero">
-    <div class="hero-inner">
-      <h1>Wszechstronni</h1>
-      <div class="tagline">Nauka • Zabawa • Udział • Zarobek</div>
-    </div>
-  </header>
+    <!-- NAWIGACJA -->
+    <nav>
+        <div class="brand">Wszechstronni</div>
+        <div class="nav-links">
+            <a href="#nauka">Nauka</a>
+            <a href="#zabawa">Zabawa</a>
+            <a href="#zarobek">Zarobek</a>
+        </div>
+    </nav>
 
-  <main>
-    <section class="panel" aria-labelledby="intro">
-      <p id="intro">
-        Wszechstronni to strona, która powstała z myślą o tym,
-        aby każdy miał realną szansę nauczyć się zarabiać w internecie,
-        nawet jeśli zaczyna od zera.
-      </p>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-inner">
+            <h1>Wszechstronni</h1>
+            <p class="tagline">Nauka • Zabawa • Udział • Zarobek</p>
+        </div>
     </section>
 
-    <section id="o-co-chodzi" class="panel" aria-labelledby="o-co-tyt">
-      <h2 id="o-co-tyt">🌌 O co chodzi?</h2>
-      <p>
-        Wszechstronni to przestrzeń wymiany wiedzy i doświadczeń.
-        Dla osób początkujących, ambitnych i tych,
-        którzy już zarabiają w internecie i chcą dzielić się know‑how.
-      </p>
+    <!-- PANEL 1 -->
+    <section id="nauka" class="panel">
+        <h2>Nauka</h2>
+        <p>Rozwijaj swoje umiejętności, zdobywaj wiedzę i ucz się od innych członków społeczności.</p>
+        <ul class="features-list">
+            <li>Kursy i poradniki</li>
+            <li>Wymiana wiedzy</li>
+            <li>Wsparcie ekspertów</li>
+        </ul>
     </section>
 
-    <section class="panel" aria-labelledby="rozwoj">
-      <p id="rozwoj">
-        To przestrzeń do nauki, testowania pomysłów
-        i wspólnego rozwoju — tworzona przez osoby,
-        które same są w drodze.
-      </p>
+    <!-- PANEL 2 -->
+    <section id="zabawa" class="panel">
+        <h2>Zabawa</h2>
+        <p>Dołącz do aktywnej społeczności, bierz udział w wydarzeniach i wspólnych projektach.</p>
+        <ul class="features-list">
+            <li>Wyzwania</li>
+            <li>Gry i konkursy</li>
+            <li>Spotkania społeczności</li>
+        </ul>
     </section>
 
-    <section id="co-znajdziesz" class="panel" aria-labelledby="co-znajdziesz-tyt">
-      <h2 id="co-znajdziesz-tyt">🚀 Co tu znajdziesz?</h2>
-      <ul class="features-list">
-        <li>praktyczną naukę i poradniki</li>
-        <li>wymianę pomysłów i doświadczeń</li>
-        <li>projekty i współpracę</li>
-        <li>realne drogi do zarabiania online</li>
-      </ul>
+    <!-- PANEL 3 -->
+    <section id="zarobek" class="panel">
+        <h2>Zarobek</h2>
+        <p>Zarabiaj dzięki swoim umiejętnościom, pomysłom i aktywności w społeczności.</p>
+        <ul class="features-list">
+            <li>Projekty płatne</li>
+            <li>Współprace</li>
+            <li>Program partnerski</li>
+        </ul>
     </section>
 
-    <section id="dla-kogo" class="panel" aria-labelledby="dla-kogo-tyt">
-      <h2 id="dla-kogo-tyt">Dla kogo?</h2>
-      <p>Strona dla początkujących, twórców i osób szukających praktycznych rozwiązań.</p>
-    </section>
+    <!-- STOPKA -->
+    <footer class="site-footer">
+        © 2025 Wszechstronni — Społeczność wymiany wiedzy
+    </footer>
 
-    <section id="komentarze" class="panel" aria-labelledby="kom-tyt">
-      <h2 id="kom-tyt">Komentarze</h2>
-
-      <article class="comment" aria-labelledby="kom1">
-        <h3 id="kom1">Anna</h3>
-        <p>Świetne materiały dla początkujących.</p>
-      </article>
-
-      <article class="comment" aria-labelledby="kom2">
-        <h3 id="kom2">Marek</h3>
-        <p>Praktyczne przykłady i jasne wyjaśnienia.</p>
-      </article>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    © <span id="year">2026</span> Wszechstronni
-  </footer>
-
-  <script>
-    (function(){
-      const el = document.getElementById('year');
-      if (el) el.textContent = new Date().getFullYear();
-    })();
-  </script>
 </body>
 </html>
