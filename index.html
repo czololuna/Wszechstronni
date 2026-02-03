@@ -1,71 +1,185 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wszechstronni</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Wszechstronni – Nauka • Zabawa • Udział • Zarobek</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #ffffff;
+      background: radial-gradient(circle at top, #2b1055, #000000 70%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    .stars {
+      position: fixed;
+      inset: 0;
+      background: url("https://raw.githubusercontent.com/VincentGarreau/particles.js/master/demo/media/star.png");
+      opacity: 0.22;
+      z-index: -1;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(20, 10, 40, 0.7);
+      backdrop-filter: blur(8px);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav a {
+      color: #fff;
+      margin-right: 14px;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: opacity 0.2s;
+    }
+
+    nav a:hover {
+      opacity: 0.7;
+    }
+
+    header {
+      text-align: center;
+      padding: 80px 20px 40px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    .tagline {
+      font-size: 1.2rem;
+      opacity: 0.85;
+    }
+
+    section {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 24px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 18px;
+      backdrop-filter: blur(6px);
+    }
+
+    h2 {
+      color: #9ad0ff;
+      margin-top: 0;
+    }
+
+    ul li {
+      margin-bottom: 6px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 0.9rem;
+      opacity: 0.6;
+    }
+  </style>
 </head>
+
 <body>
 
-    <!-- GWIAZDY -->
-    <div class="stars"></div>
+  <div class="stars"></div>
 
-    <!-- NAWIGACJA -->
-    <nav>
-        <div class="brand">Wszechstronni</div>
-        <div class="nav-links">
-            <a href="#nauka">Nauka</a>
-            <a href="#zabawa">Zabawa</a>
-            <a href="#zarobek">Zarobek</a>
-        </div>
-    </nav>
+  <nav>
+    <strong>🌌 Wszechstronni</strong>
+    <div>
+      <a href="#o-co-chodzi">O co chodzi</a>
+      <a href="#co-znajdziesz">Co znajdziesz</a>
+      <a href="#dla-kogo">Dla kogo</a>
+    </div>
+  </nav>
 
-    <!-- HERO -->
-    <section class="hero">
-        <div class="hero-inner">
-            <h1>Wszechstronni</h1>
-            <p class="tagline">Nauka • Zabawa • Udział • Zarobek</p>
-        </div>
-    </section>
+  <header>
+    <h1>Wszechstronni</h1>
+    <div class="tagline">Nauka • Zabawa • Udział • Zarobek</div>
+  </header>
 
-    <!-- PANEL 1 -->
-    <section id="nauka" class="panel">
-        <h2>Nauka</h2>
-        <p>Rozwijaj swoje umiejętności, zdobywaj wiedzę i ucz się od innych członków społeczności.</p>
-        <ul class="features-list">
-            <li>Kursy i poradniki</li>
-            <li>Wymiana wiedzy</li>
-            <li>Wsparcie ekspertów</li>
-        </ul>
-    </section>
+  <section id="o-co-chodzi">
+    <h2>🌌 O co chodzi?</h2>
 
-    <!-- PANEL 2 -->
-    <section id="zabawa" class="panel">
-        <h2>Zabawa</h2>
-        <p>Dołącz do aktywnej społeczności, bierz udział w wydarzeniach i wspólnych projektach.</p>
-        <ul class="features-list">
-            <li>Wyzwania</li>
-            <li>Gry i konkursy</li>
-            <li>Spotkania społeczności</li>
-        </ul>
-    </section>
+    <p>Wszechstronni – to coś więcej niż strona. Powstała z bardzo prostej potrzeby: chęci nauczenia się, jak realnie zarabiać w internecie, zaczynając od zera.</p>
 
-    <!-- PANEL 3 -->
-    <section id="zarobek" class="panel">
-        <h2>Zarobek</h2>
-        <p>Zarabiaj dzięki swoim umiejętnościom, pomysłom i aktywności w społeczności.</p>
-        <ul class="features-list">
-            <li>Projekty płatne</li>
-            <li>Współprace</li>
-            <li>Program partnerski</li>
-        </ul>
-    </section>
+    <p>Nie jestem ekspertem i nie mam gotowych odpowiedzi. Sam uczę się, testuję różne rozwiązania i sprawdzam, co faktycznie ma sens. Ta strona to zapis drogi — mojej i osób, które są w podobnym miejscu.</p>
 
-    <!-- STOPKA -->
-    <footer class="site-footer">
-        © 2025 Wszechstronni — Społeczność wymiany wiedzy
-    </footer>
+    <p>Bez obiecywania szybkich pieniędzy i bez sprzedawania marzeń. Będą tu pojawiać się:</p>
+
+    <ul>
+      <li>rzeczy, które testuję sam</li>
+      <li>narzędzia, które mogą pomóc w zarabianiu online</li>
+      <li>wiedza od innych osób, które chcą się nią podzielić</li>
+      <li>realne pomysły dla tych, którzy zaczynają bez kapitału</li>
+    </ul>
+
+    <p>Jeśli też jesteś na początku albo szukasz uczciwych informacji — ta strona jest dla Ciebie. Z czasem pojawi się możliwość komentowania i dzielenia się własnymi doświadczeniami. Na razie budujemy solidne fundamenty.</p>
+
+    <p>To miejsce do nauki, testowania pomysłów i wspólnego rozwoju. Tworzone przez ludzi, którzy sami są w drodze i uczą się na własnych doświadczeniach.</p>
+  </section>
+
+  <section id="co-znajdziesz">
+    <h2>🚀 Co tu znajdziesz?</h2>
+    <ul>
+      <li>praktyczną naukę krok po kroku</li>
+      <li>realne pomysły na zarabianie</li>
+      <li>dzielenie się doświadczeniem bez ściemy</li>
+      <li>społeczność ludzi, którzy chcą więcej</li>
+    </ul>
+  </section>
+
+  <section id="dla-kogo">
+    <h2>🧭 Dla kogo?</h2>
+    <p>Dla początkujących. Dla ambitnych. Dla tych, którzy chcą zrozumieć, a nie tylko kopiować.</p>
+  </section>
+
+  <section id="narzedzia">
+    <h2>🧰 Narzędzia, które mogą pomóc zarabiać</h2>
+
+    <p>W tym miejscu będę dodawał narzędzia i strony, które sam testuję lub które polecają inni użytkownicy.</p>
+
+    <ul>
+      <li>🔹 Hosting i strony internetowe (np. GitHub Pages)</li>
+      <li>🔹 Narzędzia AI</li>
+      <li>🔹 Platformy do pracy online</li>
+      <li>🔹 Darmowe zasoby edukacyjne</li>
+    </ul>
+
+    <p><em>Linki pojawią się wtedy, gdy będę mógł coś polecić uczciwie.</em></p>
+  </section>
+
+  <section id="komentarze">
+    <h2>💬 Komentarze i doświadczenia</h2>
+
+    <p>To miejsce będzie służyło do dzielenia się wiedzą, doświadczeniami i linkami, które pomagają zarabiać w internecie.</p>
+
+    <p>Na początku komentarze będą proste. Z czasem pojawi się logowanie i możliwość dodawania wpisów.</p>
+
+    <div class="comment">
+      <strong>Wszechstronni</strong>
+      <p>Sekcja komentarzy jest w budowie. Jeśli tu jesteś – wróć za jakiś czas 🙂</p>
+    </div>
+  </section>
+
+  <footer>
+    © Wszechstronni — droga przez naukę, nie skróty
+  </footer>
 
 </body>
 </html>
