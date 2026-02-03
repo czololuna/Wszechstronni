@@ -1,81 +1,230 @@
-<!DOCTYPE html>
+<!-- index.html -->
+<!doctype html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <title>Wszechstronni</title>
+  <meta charset="UTF-8"> <!-- co: ustawia kodowanie dokumentu; po co: poprawne wyświetlanie polskich znaków; gdzie zmienić: rzadko -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- co: responsywność; po co: poprawne skalowanie na telefonach; gdzie zmienić: tylko gdy eksperymentujesz z zoomem -->
+  <title>Wszechstronni – Nauka • Zabawa • Udział • Zarobek</title> <!-- co: tytuł zakładki; po co: identyfikacja strony w przeglądarce; gdzie zmienić: treść tytułu -->
+
+  <!--
+    Co dalej: prosty CSS w <style> żeby zachować jedną plikową wersję.
+    Po co: łatwo edytować i testować bez osobnego pliku.
+    Gdzie zmienić: możesz przenieść do styles.css gdy projekt urośnie.
+  -->
+  <style>
+    /* co: płynne przewijanie; po co: ładniejszy efekt przy anchor linkach; gdzie zmienić: usuń jeśli nie chcesz smooth scroll */
+    html { scroll-behavior: smooth; }
+
+    /* co: podstawowe ustawienia body; po co: tło, font, minimalna wysokość; gdzie zmienić: kolory i fonty w zmiennych poniżej */
+    :root{
+      /* centralne kolory i wartości do szybkiej edycji */
+      --bg-top: #2b1055; /* gradient start */
+      --bg-bottom: #000000; /* gradient end */
+      --nav-bg: rgba(20, 10, 40, 0.7);
+      --panel-bg: rgba(255,255,255,0.05);
+      --accent: #9ad0ff;
+      --text: #ffffff;
+      --container-max: 900px;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif; /* co: font systemowy; po co: czytelność; gdzie zmienić: na Google Fonts lub inny */
+      color: var(--text);
+      background: radial-gradient(circle at top, var(--bg-top), var(--bg-bottom) 70%); /* co: tło gradientowe; po co: estetyka; gdzie zmienić: kolory w :root */
+      min-height: 100vh;
+      overflow-x: hidden; /* co: zapobiega poziomemu scrollowi; po co: estetyka; gdzie zmienić: rzadko */
+    }
+
+    /* co: warstwa z gwiazdkami; po co: dekoracja tła; gdzie zmienić: URL obrazka lub opacity */
+    .stars {
+      position: fixed;
+      inset: 0;
+      background: url("https://raw.githubusercontent.com/VincentGarreau/particles.js/master/demo/media/star.png") repeat;
+      opacity: 0.2;
+      z-index: -1; /* co: umieszcza gwiazdki za treścią; po co: nie zasłania elementów; gdzie zmienić: z-index jeśli dodasz inne warstwy */
+      background-size: 200px; /* co: rozmiar obrazka gwiazd; po co: kontrola gęstości; gdzie zmienić: wartość */
+    }
+
+    /* co: pasek nawigacji; po co: szybki dostęp do sekcji; gdzie zmienić: padding, kolory, pozycję */
+    nav {
+      position: sticky; /* co: przykleja nav do góry przy scrollu; po co: dostępność; gdzie zmienić: na fixed jeśli chcesz zawsze widoczny */
+      top: 0;
+      z-index: 10;
+      background: var(--nav-bg);
+      backdrop-filter: blur(8px); /* co: rozmycie tła pod nav; po co: efekt szkła; gdzie zmienić: usuń jeśli nie chcesz efektu */
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* co: linki w nav; po co: wygląd i odstępy; gdzie zmienić: kolor i margines */
+    nav a {
+      color: #fff;
+      margin-right: 12px;
+      text-decoration: none;
+    }
+
+    /* co: nagłówek strony; po co: centralne wyrównanie i odstępy; gdzie zmienić: padding i rozmiar fontu */
+    header {
+      text-align: center;
+      padding: 80px 20px 40px;
+    }
+
+    /* co: główny tytuł; po co: duży nagłówek; gdzie zmienić: font-size i letter-spacing */
+    h1 {
+      font-size: 3rem;
+      letter-spacing: 2px;
+      margin: 0.2rem 0;
+    }
+
+    /* co: podtytuł pod nagłówkiem; po co: krótka tagline; gdzie zmienić: font-size i opacity */
+    .tagline {
+      font-size: 1.2rem;
+      opacity: 0.85;
+      margin-top: 10px;
+    }
+
+    /* co: wspólny styl sekcji; po co: ogranicza szerokość i dodaje panelowy wygląd; gdzie zmienić: --container-max lub padding */
+    section {
+      max-width: var(--container-max);
+      margin: 40px auto;
+      padding: 20px;
+      background: var(--panel-bg);
+      border-radius: 16px;
+      backdrop-filter: blur(6px);
+    }
+
+    /* co: kolor nagłówków sekcji; po co: akcent kolorystyczny; gdzie zmienić: --accent */
+    h2 {
+      color: var(--accent);
+      margin-top: 0;
+    }
+
+    /* co: pojedynczy komentarz w sekcji komentarzy; po co: separacja wpisów; gdzie zmienić: marginesy i border */
+    .comment {
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+
+    /* co: stopka; po co: meta informacje; gdzie zmienić: padding i opacity */
+    footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 0.9rem;
+      opacity: 0.6;
+    }
+
+    /* co: prosty layout dla linków w nav na małych ekranach; po co: lepsze dopasowanie; gdzie zmienić: breakpoint */
+    @media (max-width: 600px) {
+      header { padding: 40px 12px 20px; }
+      h1 { font-size: 2rem; }
+      section { margin: 20px 12px; padding: 16px; }
+      nav { padding: 10px 12px; }
+    }
+  </style>
 </head>
 
 <body>
 
-  <h1>Wszechstronni</h1>
+  <!-- co: dekoracyjna warstwa gwiazdek; po co: estetyka; gdzie zmienić: usuń jeśli chcesz prostsze tło -->
+  <div class="stars" aria-hidden="true"></div>
 
-  <!-- O CO CHODZI -->
-  <h2>O co chodzi?</h2>
+  <!-- co: pasek nawigacji; po co: szybkie przejścia do sekcji; gdzie zmienić: linki i tekst -->
+  <nav>
+    <strong>🌌 Wszechstronni</strong>
+    <div>
+      <a href="#o-co-chodzi">O co chodzi</a>
+      <a href="#co-znajdziesz">Co znajdziesz</a>
+      <a href="#dla-kogo">Dla kogo</a>
+      <a href="#komentarze">Komentarze</a>
+    </div>
+  </nav>
 
-  <p>
-    Wszechstronni to strona stworzona z myślą o osobach,
-    które chcą zacząć zarabiać w internecie
-    <strong>bez wkładu własnego</strong>,
-    nawet jeśli startują całkowicie od zera.
-  </p>
+  <!-- co: główny nagłówek strony; po co: pierwsze wrażenie; gdzie zmienić: tekst i tagline -->
+  <header>
+    <h1>Wszechstronni</h1>
+    <div class="tagline">Nauka • Zabawa • Udział • Zarobek</div>
+  </header>
 
-  <p>
-    Pokazujemy realne możliwości, narzędzia i drogi,
-    które można sprawdzić bez ryzyka
-    i bez wydawania pieniędzy na start.
-  </p>
+  <!-- co: krótki wstęp; po co: opis misji; gdzie zmienić: treść paragrafu -->
+  <section aria-labelledby="intro">
+    <p id="intro">
+      Wszechstronni to strona, która powstała z myślą o tym,
+      aby każdy miał realną szansę nauczyć się zarabiać w internecie,
+      nawet jeśli zaczyna od zera.
+    </p>
+  </section>
 
-  <hr>
+  <!-- co: sekcja opisująca cel; po co: wyjaśnienie dla odwiedzających; gdzie zmienić: nagłówek i akapit -->
+  <section id="o-co-chodzi" aria-labelledby="o-co-tyt">
+    <h2 id="o-co-tyt">🌌 O co chodzi?</h2>
+    <p>
+      Wszechstronni to przestrzeń wymiany wiedzy i doświadczeń.
+      Dla osób początkujących, ambitnych i tych,
+      którzy już zarabiają w internecie i chcą dzielić się know-how.
+    </p>
+  </section>
 
-  <!-- NARZĘDZIA -->
-  <h2>Narzędzia (bezpłatne na start)</h2>
+  <!-- co: dodatkowy opis; po co: uzupełnienie treści; gdzie zmienić: możesz połączyć z powyższą sekcją -->
+  <section aria-labelledby="rozwoj">
+    <p id="rozwoj">
+      To przestrzeń do nauki, testowania pomysłów
+      i wspólnego rozwoju — tworzona przez osoby,
+      które same są w drodze.
+    </p>
+  </section>
 
-  <p>
-    Wszystkie narzędzia poniżej można używać
-    <strong>za darmo</strong>.
-    Płatne opcje są dobrowolne
-    i nie są wymagane, aby zacząć.
-  </p>
+  <!-- co: lista zasobów; po co: szybkie punkty oferty; gdzie zmienić: dodaj/usuń li -->
+  <section id="co-znajdziesz" aria-labelledby="co-znajdziesz-tyt">
+    <h2 id="co-znajdziesz-tyt">🚀 Co tu znajdziesz?</h2>
+    <ul>
+      <li>praktyczną naukę i poradniki</li>
+      <li>wymianę pomysłów i doświadczeń</li>
+      <li>projekty i współpracę</li>
+      <li>realne drogi do zarabiania online</li>
+    </ul>
+  </section>
 
-  <ul>
-    <li>
-      <strong>Canva</strong><br>
-      Darmowe narzędzie do tworzenia grafik, postów
-      i materiałów online. Wersja bezpłatna
-      w zupełności wystarcza na początek.<br>
-      <a href="https://www.canva.com/" target="_blank">Przejdź do Canva</a>
-    </li>
+  <!-- co: sekcja dla docelowej grupy; po co: komunikacja z odbiorcą; gdzie zmienić: treść -->
+  <section id="dla-kogo" aria-labelledby="dla-kogo-tyt">
+    <h2 id="dla-kogo-tyt">Dla kogo?</h2>
+    <p>Strona dla początkujących, twórców i osób szukających praktycznych rozwiązań.</p>
+  </section>
 
-    <br>
+  <!-- co: sekcja komentarzy; po co: społeczny dowód; gdzie zmienić: dodaj realne komentarze lub formularz -->
+  <section id="komentarze" aria-labelledby="kom-tyt">
+    <h2 id="kom-tyt">Komentarze</h2>
 
-    <li>
-      <strong>GitHub</strong><br>
-      Całkowicie darmowa platforma do nauki
-      i publikowania kodu oraz stron internetowych.
-      Idealna do pierwszych projektów online.<br>
-      <a href="https://www.github.com/" target="_blank">Przejdź do GitHub</a>
-    </li>
+    <article class="comment" aria-labelledby="kom1">
+      <h3 id="kom1">Anna</h3>
+      <p>Świetne materiały dla początkujących.</p>
+    </article>
 
-    <br>
+    <article class="comment" aria-labelledby="kom2">
+      <h3 id="kom2">Marek</h3>
+      <p>Praktyczne przykłady i jasne wyjaśnienia.</p>
+    </article>
+  </section>
 
-    <li>
-      <strong>Fiverr</strong><br>
-      Rejestracja i wystawienie ofert są darmowe.
-      Można sprzedawać proste usługi
-      bez jakiegokolwiek wkładu finansowego.<br>
-      <a href="https://www.fiverr.com/" target="_blank">Przejdź do Fiverr</a>
-    </li>
+  <!-- co: stopka; po co: prawa autorskie i meta; gdzie zmienić: rok i nazwa firmy -->
+  <footer>
+    © <span id="year">2026</span> Wszechstronni
+  </footer>
 
-    <br>
-
-    <li>
-      <strong>Upwork</strong><br>
-      Konto można założyć za darmo.
-      Platforma pozwala szukać zleceń online
-      bez inwestowania pieniędzy na start.<br>
-      <a href="https://www.upwork.com/" target="_blank">Przejdź do Upwork</a>
-    </li>
-  </ul>
-
+  <!--
+    co: prosty skrypt do aktualizacji roku w stopce;
+    po co: nie trzeba ręcznie zmieniać daty co roku;
+    gdzie zmienić: usuń jeśli chcesz stronę bez JS
+  -->
+  <script>
+    // aktualizuje rok w stopce automatycznie
+    (function(){
+      const el = document.getElementById('year');
+      if(el) el.textContent = new Date().getFullYear();
+    })();
+  </script>
 </body>
 </html>
