@@ -136,8 +136,10 @@
     function saveComments(){
         const comments = [];
         list.querySelectorAll('.comment').forEach(el=>{
-            comments.push(el.textContent);
-        });
+            comments.push({
+  text: commentText,
+  date: new Date().toLocaleString()
+});
         localStorage.setItem(STORAGE_KEY, JSON.stringify(comments));
     }
 
