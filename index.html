@@ -255,21 +255,24 @@ które sam sprawdziłem w praktyce.
 Bez sponsorów, bez wciskania — tylko to,
 co faktycznie miało sens.
 </p>
-</section>
-
 <section id="komentarze" class="fade">
-  <section id="komentarze" class="fade">
   <h2>💬 Komentarze</h2>
 
-  <p>To miejsce do krótkich myśli, opinii i doświadczeń.</p>
+  <div style="margin-bottom: 20px;">
+    <input 
+      id="commentInput" 
+      type="text" 
+      placeholder="Napisz komentarz..." 
+      style="width: 100%; padding: 12px; border-radius: 10px; border: none; outline: none; background: rgba(255,255,255,0.1); color: white;">
+  </div>
 
-  <textarea id="commentInput" placeholder="Napisz komentarz..." style="width:100%;min-height:80px;"></textarea>
-
-  <button id="addComment" style="margin-top:10px;">
+  <button 
+    id="addComment" 
+    style="padding: 10px 20px; border: none; border-radius: 10px; background: #8fd3ff; color: black; font-weight: bold; cursor: pointer;">
     Dodaj komentarz
   </button>
 
-  <div id="commentsList" style="margin-top:20px;"></div>
+  <div id="commentsList" style="margin-top: 25px;"></div>
 </section>
 
 </main>
