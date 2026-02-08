@@ -1,4 +1,6 @@
-/* ====== Stars Canvas ====== */
+/* =====================================================
+   MODULE 1: STARS CANVAS (tło animowane)
+   ===================================================== */
 (function(){
     const canvas = document.getElementById('starsCanvas');
     const ctx = canvas.getContext('2d');
@@ -9,11 +11,13 @@
     const STAR_COUNT = Math.round((w * h) / 12000);
     const stars = [];
 
-    function rand(min, max){ return Math.random() * (max - min) + min; }
+    function rand(min, max){ 
+        return Math.random() * (max - min) + min; 
+    }
 
     function initStars(){
         stars.length = 0;
-        for(let i=0;i<STAR_COUNT;i++){
+        for(let i = 0; i < STAR_COUNT; i++){
             stars.push({
                 x: Math.random() * w,
                 y: Math.random() * h,
@@ -26,19 +30,19 @@
     }
 
     function draw(){
-        ctx.clearRect(0,0,w,h);
+        ctx.clearRect(0, 0, w, h);
         for(const s of stars){
             s.phase += s.twinkleSpeed;
             const a = s.alpha * (0.6 + 0.4 * Math.sin(s.phase));
 
-            ctx.beginPath();
-            const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r*4);
+            const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 4);
             g.addColorStop(0, `rgba(255,255,255,${a})`);
-            g.addColorStop(0.6, `rgba(200,220,255,${a*0.25})`);
+            g.addColorStop(0.6, `rgba(200,220,255,${a * 0.25})`);
             g.addColorStop(1, `rgba(200,220,255,0)`);
 
+            ctx.beginPath();
             ctx.fillStyle = g;
-            ctx.arc(s.x, s.y, s.r*4, 0, Math.PI*2);
+            ctx.arc(s.x, s.y, s.r * 4, 0, Math.PI * 2);
             ctx.fill();
         }
     }
@@ -66,7 +70,9 @@
     addEventListener('resize', onResize);
 })();
 
-/* ====== Fade-in przy scrollu ====== */
+/* =====================================================
+   MODULE 2: SECTION FADE-IN (scroll animation)
+   ===================================================== */
 (function(){
     const observer = new IntersectionObserver((entries)=>{
         entries.forEach(entry=>{
@@ -77,10 +83,12 @@
         });
     }, { threshold: 0.12 });
 
-    document.querySelectorAll('section.fade').forEach(s => observer.observe(s));
+    document.querySelectorAll('section.fade').forEach(section => observer.observe(section));
 })();
 
-/* ====== Mobile menu ====== */
+/* =====================================================
+   MODULE 3: MOBILE MENU
+   ===================================================== */
 (function(){
     const hamburger = document.getElementById('hamburger');
     const mobileContainer = document.getElementById('mobileMenuContainer');
@@ -93,6 +101,7 @@
             <a href="#o-co-chodzi">O co chodzi</a>
             <a href="#co-znajdziesz">Co znajdziesz</a>
             <a href="#dla-kogo">Dla kogo</a>
+            <a href="#spolecznosc">Społeczność</a>
         `;
         menu.addEventListener('click', ()=> toggleMenu(false));
         return menu;
@@ -101,19 +110,22 @@
     function toggleMenu(force){
         open = typeof force === 'boolean' ? force : !open;
         mobileContainer.innerHTML = '';
+
         if(open){
             mobileContainer.appendChild(buildMenu());
-            mobileContainer.setAttribute('aria-hidden','false');
+            mobileContainer.setAttribute('aria-hidden', 'false');
         } else {
-            mobileContainer.setAttribute('aria-hidden','true');
+            mobileContainer.setAttribute('aria-hidden', 'true');
         }
     }
 
     hamburger.addEventListener('click', ()=> toggleMenu());
-    addEventListener('resize', ()=> {
+
+    addEventListener('resize', ()=>{
         if(innerWidth > 720) toggleMenu(false);
     });
 })();
+
 /* =====================================================
    MODULE 4: COMMENTS (localStorage + delete + date)
    ===================================================== */
