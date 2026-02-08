@@ -115,7 +115,7 @@
     });
 })();
 /* =====================================================
-   MODULE 4: COMMENTS (localStorage)
+   MODULE 4: COMMENTS (localStorage + delete + date)
    ===================================================== */
 (function comments(){
     const input = document.getElementById('commentInput');
@@ -130,28 +130,51 @@
         const saved = localStorage.getItem(STORAGE_KEY);
         if(!saved) return;
         const comments = JSON.parse(saved);
-        comments.forEach(addCommentToDOM);
+        comments.forEach(c => addCommentToDOM(c.text, c.date));
     }
 
     function saveComments(){
         const comments = [];
         list.querySelectorAll('.comment').forEach(el=>{
             comments.push({
-  text: commentText,
-  date: new Date().toLocaleString()
-});
+                text: el.querySelector('.text').textContent,
+                date: el.querySelector('.date').textContent
+            });
+        });
         localStorage.setItem(STORAGE_KEY, JSON.stringify(comments));
     }
 
-    function addCommentToDOM(text){
-        const comment = document.createElement('div');
-        comment.className = 'comment';
-        comment.style.padding = '10px';
-        comment.style.marginBottom = '10px';
-        comment.style.background = 'rgba(255,255,255,0.08)';
-        comment.style.borderRadius = '10px';
-        comment.textContent = text;
-        list.prepend(comment);
+    function addCommentToDOM(text, date = new Date().toLocaleString()){
+        const wrapper = document.createElement('div');
+        wrapper.className = 'comment';
+        wrapper.style.padding = '10px';
+        wrapper.style.marginBottom = '10px';
+        wrapper.style.background = 'rgba(255,255,255,0.08)';
+        wrapper.style.borderRadius = '10px';
+
+        wrapper.innerHTML = `
+            <div class="text">${text}</div>
+            <div class="date" style="opacity:0.6; font-size:0.8rem; margin-top:4px;">
+                ${date}
+            </div>
+            <button class="deleteBtn" style="
+                margin-top:8px;
+                padding:4px 10px;
+                background:#ff4d4d;
+                border:none;
+                border-radius:6px;
+                color:white;
+                cursor:pointer;
+                font-size:0.8rem;
+            ">Usuń</button>
+        `;
+
+        wrapper.querySelector('.deleteBtn').addEventListener('click', ()=>{
+            wrapper.remove();
+            saveComments();
+        });
+
+        list.prepend(wrapper);
     }
 
     button.addEventListener('click', ()=>{
