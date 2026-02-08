@@ -22,9 +22,7 @@
       --radius: 16px;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -63,11 +61,7 @@
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
 
-    nav .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    nav .nav-left { display: flex; align-items: center; gap: 10px; }
 
     nav a {
       color: var(--text);
@@ -77,9 +71,7 @@
       transition: 0.2s;
     }
 
-    nav a:hover {
-      opacity: 0.7;
-    }
+    nav a:hover { opacity: 0.7; }
 
     #hamburger {
       display: none;
@@ -118,12 +110,6 @@
       gap: 18px;
     }
 
-    .mobile-menu a {
-      color: #ffffff;
-      text-decoration: none;
-      font-size: 1rem;
-    }
-
     header {
       text-align: center;
       padding: 80px 20px 40px;
@@ -131,22 +117,11 @@
       position: relative;
     }
 
-    h1 {
-      font-size: 3rem;
-      margin: 0;
-      letter-spacing: 2px;
-    }
+    h1 { font-size: 3rem; margin: 0; letter-spacing: 2px; }
 
-    .tagline {
-      font-size: 1.2rem;
-      opacity: 0.85;
-    }
+    .tagline { font-size: 1.2rem; opacity: 0.85; }
 
-    main {
-      position: relative;
-      z-index: 2;
-      padding: 20px;
-    }
+    main { position: relative; z-index: 2; padding: 20px; }
 
     section {
       max-width: 900px;
@@ -166,10 +141,7 @@
       transform: translateY(0);
     }
 
-    h2 {
-      color: var(--accent);
-      margin-top: 0;
-    }
+    h2 { color: var(--accent); margin-top: 0; }
 
     footer {
       text-align: center;
@@ -181,12 +153,8 @@
     }
 
     @media (max-width: 720px) {
-      nav .nav-links {
-        display: none;
-      }
-      #hamburger {
-        display: flex;
-      }
+      nav .nav-links { display: none; }
+      #hamburger { display: flex; }
     }
   </style>
 </head>
@@ -206,11 +174,10 @@
     <a href="#o-co-chodzi">O co chodzi</a>
     <a href="#co-znajdziesz">Co znajdziesz</a>
     <a href="#dla-kogo">Dla kogo</a>
+    <a href="#spolecznosc">Społeczność</a>
   </div>
   <div id="hamburger" aria-label="Menu">
-    <span></span>
-    <span></span>
-    <span></span>
+    <span></span><span></span><span></span>
   </div>
 </nav>
 
@@ -224,7 +191,7 @@
 <section id="o-co-chodzi" class="fade">
   <h2>🌌 O co chodzi?</h2>
   <p>Wszechstronni to projekt dla osób, które chcą zacząć od zera i krok po kroku budować coś własnego w internecie — bez ściemy, bez obietnic szybkich pieniędzy.</p>
-  <p>To przestrzeń do nauki, testowania pomysłów i wspólnego rozwoju. Tworzona przez ludzi, którzy zaczynają od zera i uczą się na własnych doświadczeniach.</p>
+  <p>To przestrzeń do nauki, testowania pomysłów i wspólnego rozwoju.</p>
 </section>
 
 <section id="co-znajdziesz" class="fade">
@@ -244,28 +211,22 @@
 
 <section id="narzedzia" class="fade">
   <h2>🧰 Narzędzia</h2>
-  <p>
-    To miejsce będzie zapisem narzędzi i rozwiązań,
-    które sam sprawdziłem w praktyce.
-    Bez sponsorów, bez wciskania — tylko to,
-    co faktycznie miało sens.
-  </p>
+  <p>To miejsce będzie zapisem narzędzi i rozwiązań, które sam sprawdziłem w praktyce.</p>
+</section>
+
+<section id="spolecznosc" class="fade">
+  <h2>🤝 Społeczność</h2>
+  <p>Tu możesz zostawić swój komentarz, opinię lub doświadczenie.</p>
 </section>
 
 <section id="komentarze" class="fade">
   <h2>💬 Komentarze</h2>
 
   <div style="margin-bottom: 20px;">
-    <input 
-      id="commentInput" 
-      type="text" 
-      placeholder="Napisz komentarz..." 
-      style="width: 100%; padding: 12px; border-radius: 10px; border: none; outline: none; background: rgba(255,255,255,0.1); color: white;">
+    <input id="commentInput" type="text" placeholder="Napisz komentarz..." style="width: 100%; padding: 12px; border-radius: 10px; border: none; outline: none; background: rgba(255,255,255,0.1); color: white;">
   </div>
 
-  <button 
-    id="addComment" 
-    style="padding: 10px 20px; border: none; border-radius: 10px; background: #8fd3ff; color: black; font-weight: bold; cursor: pointer;">
+  <button id="addComment" style="padding: 10px 20px; border: none; border-radius: 10px; background: #8fd3ff; color: black; font-weight: bold; cursor: pointer;">
     Dodaj komentarz
   </button>
 
