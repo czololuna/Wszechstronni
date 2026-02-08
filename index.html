@@ -1,237 +1,238 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="utf-8">
-  <title>Wszechstronni – Nauka • Zabawa • Udział • Zarobek</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <title>Wszechstronni – Nauka • Rozwój • Zarabianie</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="description" content="Wszechstronni – projekt dla osób, które chcą uczyć się, testować i zarabiać w internecie, zaczynając od zera. Bez ściemy, bez obietnic, tylko realna droga.">
+  <meta name="keywords" content="zarabianie online, nauka, rozwój, internet, praca zdalna, narzędzia, pomysły">
+  <meta property="og:title" content="Wszechstronni – Nauka • Rozwój • Zarabianie">
+  <meta property="og:description" content="Projekt dla osób, które chcą zacząć od zera i rozwijać się w internecie.">
+  <meta property="og:type" content="website">
 
   <style>
-    :root{
-      --bg-top:#2b1055;
-      --bg-bottom:#000000;
+    :root {
+      --bg-top: #1a0636;
+      --bg-bottom: #000000;
+      --accent: #8fd3ff;
       --card-bg: rgba(255,255,255,0.06);
-      --accent:#9ad0ff;
-      --text:#ffffff;
-      --glass-blur: 8px;
+      --glass: blur(10px);
+      --text: #ffffff;
+      --radius: 16px;
     }
 
-    html { scroll-behavior: smooth; box-sizing: border-box; }
-    *,*::before,*::after{ box-sizing: inherit; }
+    html {
+      scroll-behavior: smooth;
+    }
 
-    body{
-      margin:0;
-      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      color:var(--text);
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
       background: radial-gradient(circle at top, var(--bg-top), var(--bg-bottom) 70%);
-      min-height:100vh;
-      overflow-x:hidden;
-      line-height:1.6;
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
     }
 
-    /* Canvas gwiazdy */
-    #starsCanvas{
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      opacity:0.95;
-      mix-blend-mode:screen;
+    #stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
     }
 
-    /* Overlay dla lepszej czytelności */
-    .overlay{
-      position:fixed;
-      inset:0;
-      background: linear-gradient(180deg, rgba(10,6,20,0.18), rgba(0,0,0,0.35));
-      backdrop-filter: blur(var(--glass-blur));
-      z-index:1;
-      pointer-events:none;
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.4), rgba(0,0,0,0.7));
+      backdrop-filter: var(--glass);
+      z-index: 1;
     }
 
-    /* Główna zawartość */
-    .site{
-      position:relative;
-      z-index:2;
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(8px);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
     }
 
-    nav{
-      position:sticky;
-      top:0;
-      z-index:3;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:12px 18px;
-      background: rgba(20,10,40,0.45);
-      backdrop-filter: blur(6px);
-      border-bottom: 1px solid rgba(255,255,255,0.03);
+    nav a {
+      color: var(--text);
+      margin-left: 14px;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: 0.2s;
     }
 
-    .brand{ font-weight:700; letter-spacing:1px; }
-    .nav-links{ display:flex; gap:12px; align-items:center; }
-
-    .nav-links a{
-      color:var(--text);
-      text-decoration:none;
-      font-size:0.95rem;
-      transition:opacity .18s;
-    }
-    .nav-links a:hover{ opacity:0.75; }
-
-    /* Hamburger */
-    .hamburger{
-      display:none;
-      width:36px;
-      height:36px;
-      align-items:center;
-      justify-content:center;
-      background: rgba(255,255,255,0.03);
-      border-radius:8px;
-      cursor:pointer;
-      border: none;
-      color:var(--text);
+    nav a:hover {
+      opacity: 0.7;
     }
 
-    header{
-      text-align:center;
-      padding:72px 20px 36px;
-    }
-    h1{ font-size:2.6rem; margin:0 0 8px; letter-spacing:2px; }
-    .tagline{ font-size:1.05rem; opacity:0.9; }
-
-    main{ flex:1; padding:20px 16px 60px; }
-
-    section{
-      max-width:920px;
-      margin:28px auto;
-      padding:22px;
-      background:var(--card-bg);
-      border-radius:14px;
-      backdrop-filter: blur(6px);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-      transform: translateY(12px);
-      opacity:0;
-      transition: opacity 600ms cubic-bezier(.2,.9,.2,1), transform 600ms cubic-bezier(.2,.9,.2,1);
+    header {
+      text-align: center;
+      padding: 80px 20px 40px;
+      z-index: 2;
+      position: relative;
     }
 
-    section.visible{
+    h1 {
+      font-size: 3rem;
+      margin: 0;
+      letter-spacing: 2px;
+    }
+
+    .tagline {
+      font-size: 1.2rem;
+      opacity: 0.85;
+    }
+
+    main {
+      position: relative;
+      z-index: 2;
+      padding: 20px;
+    }
+
+    section {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 28px;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      backdrop-filter: var(--glass);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: 0.8s ease;
+    }
+
+    section.visible {
+      opacity: 1;
       transform: translateY(0);
-      opacity:1;
     }
 
-    h2{ color:var(--accent); margin-top:0; }
-
-    ul{ padding-left:1.15rem; margin:0.6rem 0; }
-    li{ margin-bottom:8px; }
-
-    footer{
-      text-align:center;
-      padding:28px 12px;
-      opacity:0.7;
-      font-size:0.9rem;
+    h2 {
+      color: var(--accent);
+      margin-top: 0;
     }
 
-    /* Responsywność */
-    @media (max-width:720px){
-      .nav-links{ display:none; }
-      .hamburger{ display:flex; }
-      header{ padding:56px 16px 28px; }
-      h1{ font-size:2rem; }
-      section{ margin:18px 12px; padding:18px; border-radius:12px; }
-      .mobile-menu{
-        position:fixed;
-        top:64px;
-        right:12px;
-        background: rgba(10,6,20,0.9);
-        border-radius:10px;
-        padding:10px;
-        display:flex;
-        flex-direction:column;
-        gap:8px;
-        z-index:4;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-      }
-      .mobile-menu a{ color:var(--text); text-decoration:none; padding:8px 10px; border-radius:8px; }
-      .mobile-menu a:hover{ background: rgba(255,255,255,0.03); }
+    footer {
+      text-align: center;
+      padding: 30px;
+      opacity: 0.6;
+      font-size: 0.9rem;
+      z-index: 2;
+      position: relative;
     }
-
-    /* Drobne poprawki dostępności */
-    a:focus, button:focus { outline: 2px solid rgba(154,208,255,0.25); outline-offset: 2px; }
   </style>
 </head>
+
 <body>
 
-  <!-- Canvas z gwiazdami -->
-  <canvas id="starsCanvas" aria-hidden="true"></canvas>
+<canvas id="stars"></canvas>
+<div class="overlay"></div>
 
-  <!-- Delikatne overlay dla lepszej czytelności -->
-  <div class="overlay" aria-hidden="true"></div>
-
-  <div class="site">
-    <nav>
-      <div class="brand">🌌 Wszechstronni</div>
-
-      <div class="nav-links" role="navigation" aria-label="Główne menu">
-        <a href="#o-co-chodzi">O co chodzi</a>
-        <a href="#co-znajdziesz">Co znajdziesz</a>
-        <a href="#dla-kogo">Dla kogo</a>
-      </div>
-
-      <button class="hamburger" id="hamburger" aria-label="Otwórz menu">
-        ☰
-      </button>
-    </nav>
-
-    <!-- Mobile menu container (wypełniany JS) -->
-    <div id="mobileMenuContainer" aria-hidden="true"></div>
-
-    <header>
-      <h1>Wszechstronni</h1>
-      <div class="tagline">Nauka • Zabawa • Udział • Zarobek</div>
-    </header>
-
-    <main>
-      <section id="o-co-chodzi" class="fade">
-        <h2>🌌 O co chodzi?</h2>
-        <p>Wszechstronni – coś więcej niż strona. Powstali z bardzo prostej potrzeby: chęci nauczenia się, jak realnie zarabiać w internecie, zaczynając od zera.</p>
-        <p>Nie jestem ekspertem i nie mam gotowych odpowiedzi. Sam uczę się, testuję różne rozwiązania i sprawdzam, co faktycznie ma sens. Ta strona to zapis drogi — mojej i osób, które są w podobnym miejscu.</p>
-        <p>Bez obiecywania szybkich pieniędzy i bez sprzedawania marzeń.</p>
-      </section>
-
-      <section id="co-znajdziesz" class="fade">
-        <h2>🚀 Co tu znajdziesz?</h2>
-        <ul>
-          <li>praktyczną naukę krok po kroku</li>
-          <li>realne pomysły na zarabianie</li>
-          <li>dzielenie się doświadczeniem bez ściemy</li>
-          <li>społeczność ludzi, którzy chcą więcej</li>
-        </ul>
-      </section>
-
-      <section id="dla-kogo" class="fade">
-        <h2>🧭 Dla kogo?</h2>
-        <p>Dla początkujących. Dla ambitnych. Dla tych, którzy chcą zrozumieć, a nie tylko kopiować.</p>
-      </section>
-
-      <section id="narzedzia" class="fade">
-        <h2>🧰 Narzędzia</h2>
-        <p>Lista narzędzi i zasobów pojawi się wkrótce. Będą to rzeczy, które sam testuję i polecam uczciwie.</p>
-      </section>
-
-      <section id="komentarze" class="fade">
-        <h2>💬 Komentarze</h2>
-        <p>Sekcja komentarzy jest w budowie. Wróć za jakiś czas, aby podzielić się doświadczeniem.</p>
-      </section>
-    </main>
-
-    <footer>
-      © Wszechstronni — droga przez naukę, nie skróty
-    </footer>
+<nav>
+  <strong>🌌 Wszechstronni</strong>
+  <div>
+    <a href="#o-co-chodzi">O co chodzi</a>
+    <a href="#co-znajdziesz">Co znajdziesz</a>
+    <a href="#dla-kogo">Dla kogo</a>
   </div>
-  <script src="script.js"></script>
+</nav>
+
+<header>
+  <h1>Wszechstronni</h1>
+  <div class="tagline">Nauka • Rozwój • Zarabianie</div>
+</header>
+
+<main>
+
+<section id="o-co-chodzi">
+  <h2>🌌 O co chodzi?</h2>
+  <p>Wszechstronni to projekt dla osób, które chcą zacząć od zera i krok po kroku budować coś własnego w internecie — bez ściemy, bez obietnic szybkich pieniędzy.</p>
+  <p>To przestrzeń do nauki, testowania pomysłów i wspólnego rozwoju. Tworzona przez ludzi, którzy zaczynają od zera i uczą się na własnych doświadczeniach.</p>
+</section>
+
+<section id="co-znajdziesz">
+  <h2>🚀 Co tu znajdziesz?</h2>
+  <ul>
+    <li>praktyczną naukę krok po kroku</li>
+    <li>realne pomysły na zarabianie</li>
+    <li>doświadczenia bez koloryzowania</li>
+    <li>społeczność ludzi, którzy chcą więcej</li>
+  </ul>
+</section>
+
+<section id="dla-kogo">
+  <h2>🧭 Dla kogo?</h2>
+  <p>Dla początkujących. Dla ambitnych. Dla tych, którzy chcą zrozumieć, a nie tylko kopiować.</p>
+</section>
+
+<section id="narzedzia">
+  <h2>🧰 Narzędzia</h2>
+  <p>Lista narzędzi i zasobów pojawi się wkrótce. Będą to rzeczy, które sam testuję i polecam uczciwie.</p>
+</section>
+
+<section id="komentarze">
+  <h2>💬 Komentarze</h2>
+  <p>Sekcja komentarzy jest w budowie. Wróć za jakiś czas, aby podzielić się doświadczeniem.</p>
+</section>
+
+</main>
+
+<footer>
+  © Wszechstronni — droga przez naukę, nie skróty
+</footer>
+
+<script>
+const canvas = document.getElementById("stars");
+const ctx = canvas.getContext("2d");
+let w, h;
+
+function resize() {
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+const stars = Array.from({ length: 200 }, () => ({
+  x: Math.random() * w,
+  y: Math.random() * h,
+  r: Math.random() * 1.5 + 0.5,
+  a: Math.random() * 0.5 + 0.3,
+  s: Math.random() * 0.02 + 0.005
+}));
+
+function drawStars() {
+  ctx.clearRect(0, 0, w, h);
+  stars.forEach(star => {
+    star.a += star.s;
+    const alpha = 0.5 + Math.sin(star.a) * 0.5;
+
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+    ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add("visible");
+  });
+});
+document.querySelectorAll("section").forEach(sec => observer.observe(sec));
+</script>
+
 </body>
 </html>
-rozumiesz przekaż strony I dalszą koncepcje 
