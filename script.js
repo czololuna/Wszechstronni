@@ -114,3 +114,29 @@
         if(innerWidth > 720) toggleMenu(false);
     });
 })();
+/* =====================================================
+   MODULE 4: COMMENTS (local, without backend)
+   ===================================================== */
+(function comments(){
+    const input = document.getElementById('commentInput');
+    const button = document.getElementById('addComment');
+    const list = document.getElementById('commentsList');
+
+    if(!input || !button || !list) return;
+
+    button.addEventListener('click', ()=>{
+        const text = input.value.trim();
+        if(text === '') return;
+
+        const comment = document.createElement('div');
+        comment.style.padding = '10px';
+        comment.style.marginBottom = '10px';
+        comment.style.background = 'rgba(255,255,255,0.08)';
+        comment.style.borderRadius = '10px';
+
+        comment.textContent = text;
+        list.prepend(comment);
+
+        input.value = '';
+    });
+})();
