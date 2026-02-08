@@ -115,7 +115,7 @@
     });
 })();
 /* =====================================================
-   MODULE 4: COMMENTS (local, without backend)
+   MODULE 4: COMMENTS (localStorage)
    ===================================================== */
 (function comments(){
     const input = document.getElementById('commentInput');
@@ -124,19 +124,42 @@
 
     if(!input || !button || !list) return;
 
-    button.addEventListener('click', ()=>{
-        const text = input.value.trim();
-        if(text === '') return;
+    const STORAGE_KEY = 'wszechstronni_comments';
 
+    function loadComments(){
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if(!saved) return;
+        const comments = JSON.parse(saved);
+        comments.forEach(addCommentToDOM);
+    }
+
+    function saveComments(){
+        const comments = [];
+        list.querySelectorAll('.comment').forEach(el=>{
+            comments.push(el.textContent);
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(comments));
+    }
+
+    function addCommentToDOM(text){
         const comment = document.createElement('div');
+        comment.className = 'comment';
         comment.style.padding = '10px';
         comment.style.marginBottom = '10px';
         comment.style.background = 'rgba(255,255,255,0.08)';
         comment.style.borderRadius = '10px';
-
         comment.textContent = text;
         list.prepend(comment);
+    }
 
+    button.addEventListener('click', ()=>{
+        const text = input.value.trim();
+        if(text === '') return;
+
+        addCommentToDOM(text);
+        saveComments();
         input.value = '';
     });
+
+    loadComments();
 })();
