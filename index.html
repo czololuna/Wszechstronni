@@ -35,13 +35,15 @@
       line-height: 1.6;
     }
 
-    #stars {
+    /* Canvas gwiazd */
+    #starsCanvas {
       position: fixed;
       inset: 0;
       z-index: 0;
       pointer-events: none;
     }
 
+    /* Overlay kosmiczny */
     .overlay {
       position: fixed;
       inset: 0;
@@ -50,6 +52,7 @@
       z-index: 1;
     }
 
+    /* Nawigacja */
     nav {
       position: sticky;
       top: 0;
@@ -63,6 +66,12 @@
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
 
+    nav .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
     nav a {
       color: var(--text);
       margin-left: 14px;
@@ -73,6 +82,51 @@
 
     nav a:hover {
       opacity: 0.7;
+    }
+
+    /* Hamburger (mobile) */
+    #hamburger {
+      display: none;
+      width: 26px;
+      height: 22px;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    #hamburger span {
+      display: block;
+      height: 3px;
+      background: #ffffff;
+      border-radius: 999px;
+    }
+
+    /* Kontener menu mobilnego */
+    #mobileMenuContainer {
+      position: fixed;
+      inset: 0;
+      z-index: 9;
+      display: flex;
+      justify-content: flex-end;
+      pointer-events: none;
+    }
+
+    .mobile-menu {
+      pointer-events: auto;
+      background: rgba(0,0,0,0.9);
+      backdrop-filter: blur(10px);
+      padding: 60px 30px 30px;
+      width: 70%;
+      max-width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .mobile-menu a {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 1rem;
     }
 
     header {
@@ -130,20 +184,38 @@
       z-index: 2;
       position: relative;
     }
+
+    @media (max-width: 720px) {
+      nav .nav-links {
+        display: none;
+      }
+      #hamburger {
+        display: flex;
+      }
+    }
   </style>
 </head>
 
 <body>
 
-<canvas id="stars"></canvas>
+<canvas id="starsCanvas"></canvas>
 <div class="overlay"></div>
 
+<div id="mobileMenuContainer" aria-hidden="true"></div>
+
 <nav>
-  <strong>🌌 Wszechstronni</strong>
-  <div>
+  <div class="nav-left">
+    <strong>🌌 Wszechstronni</strong>
+  </div>
+  <div class="nav-links">
     <a href="#o-co-chodzi">O co chodzi</a>
     <a href="#co-znajdziesz">Co znajdziesz</a>
     <a href="#dla-kogo">Dla kogo</a>
+  </div>
+  <div id="hamburger" aria-label="Menu">
+    <span></span>
+    <span></span>
+    <span></span>
   </div>
 </nav>
 
@@ -154,13 +226,13 @@
 
 <main>
 
-<section id="o-co-chodzi">
+<section id="o-co-chodzi" class="fade">
   <h2>🌌 O co chodzi?</h2>
   <p>Wszechstronni to projekt dla osób, które chcą zacząć od zera i krok po kroku budować coś własnego w internecie — bez ściemy, bez obietnic szybkich pieniędzy.</p>
   <p>To przestrzeń do nauki, testowania pomysłów i wspólnego rozwoju. Tworzona przez ludzi, którzy zaczynają od zera i uczą się na własnych doświadczeniach.</p>
 </section>
 
-<section id="co-znajdziesz">
+<section id="co-znajdziesz" class="fade">
   <h2>🚀 Co tu znajdziesz?</h2>
   <ul>
     <li>praktyczną naukę krok po kroku</li>
@@ -170,17 +242,17 @@
   </ul>
 </section>
 
-<section id="dla-kogo">
+<section id="dla-kogo" class="fade">
   <h2>🧭 Dla kogo?</h2>
   <p>Dla początkujących. Dla ambitnych. Dla tych, którzy chcą zrozumieć, a nie tylko kopiować.</p>
 </section>
 
-<section id="narzedzia">
+<section id="narzedzia" class="fade">
   <h2>🧰 Narzędzia</h2>
   <p>Lista narzędzi i zasobów pojawi się wkrótce. Będą to rzeczy, które sam testuję i polecam uczciwie.</p>
 </section>
 
-<section id="komentarze">
+<section id="komentarze" class="fade">
   <h2>💬 Komentarze</h2>
   <p>Sekcja komentarzy jest w budowie. Wróć za jakiś czas, aby podzielić się doświadczeniem.</p>
 </section>
@@ -192,46 +264,138 @@
 </footer>
 
 <script>
-const canvas = document.getElementById("stars");
-const ctx = canvas.getContext("2d");
-let w, h;
+/* =====================================================
+   MODULE 1: STARS CANVAS (tło animowane)
+   ===================================================== */
+(function starsCanvas(){
+    const canvas = document.getElementById('starsCanvas');
+    const ctx = canvas.getContext('2d');
 
-function resize() {
-  w = canvas.width = window.innerWidth;
-  h = canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener("resize", resize);
+    let w = canvas.width = innerWidth;
+    let h = canvas.height = innerHeight;
 
-const stars = Array.from({ length: 200 }, () => ({
-  x: Math.random() * w,
-  y: Math.random() * h,
-  r: Math.random() * 1.5 + 0.5,
-  a: Math.random() * 0.5 + 0.3,
-  s: Math.random() * 0.02 + 0.005
-}));
+    const STAR_COUNT = Math.round((w * h) / 12000);
+    const stars = [];
 
-function drawStars() {
-  ctx.clearRect(0, 0, w, h);
-  stars.forEach(star => {
-    star.a += star.s;
-    const alpha = 0.5 + Math.sin(star.a) * 0.5;
+    function rand(min, max){
+        return Math.random() * (max - min) + min;
+    }
 
-    ctx.beginPath();
-    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
-    ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
-    ctx.fill();
-  });
-  requestAnimationFrame(drawStars);
-}
-drawStars();
+    function initStars(){
+        stars.length = 0;
+        for(let i = 0; i < STAR_COUNT; i++){
+            stars.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                r: rand(0.4, 1.6),
+                alpha: rand(0.2, 0.95),
+                twinkleSpeed: rand(0.002, 0.01),
+                phase: Math.random() * Math.PI * 2
+            });
+        }
+    }
 
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) e.target.classList.add("visible");
-  });
-});
-document.querySelectorAll("section").forEach(sec => observer.observe(sec));
+    function draw(){
+        ctx.clearRect(0, 0, w, h);
+        for(const s of stars){
+            s.phase += s.twinkleSpeed;
+            const a = s.alpha * (0.6 + 0.4 * Math.sin(s.phase));
+
+            const g = ctx.createRadialGradient(
+                s.x, s.y, 0,
+                s.x, s.y, s.r * 4
+            );
+
+            g.addColorStop(0, `rgba(255,255,255,${a})`);
+            g.addColorStop(0.6, `rgba(200,220,255,${a * 0.25})`);
+            g.addColorStop(1, `rgba(200,220,255,0)`);
+
+            ctx.beginPath();
+            ctx.fillStyle = g;
+            ctx.arc(s.x, s.y, s.r * 4, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    let rafId;
+    function loop(){
+        draw();
+        rafId = requestAnimationFrame(loop);
+    }
+
+    let resizeTimer;
+    function onResize(){
+        cancelAnimationFrame(rafId);
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(()=>{
+            w = canvas.width = innerWidth;
+            h = canvas.height = innerHeight;
+            initStars();
+            loop();
+        }, 120);
+    }
+
+    initStars();
+    loop();
+    addEventListener('resize', onResize);
+})();
+
+/* =====================================================
+   MODULE 2: SECTION FADE-IN (scroll animation)
+   ===================================================== */
+(function sectionFadeIn(){
+    const observer = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+            if(entry.isIntersecting){
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12 });
+
+    document
+        .querySelectorAll('section.fade')
+        .forEach(section => observer.observe(section));
+})();
+
+/* =====================================================
+   MODULE 3: MOBILE MENU
+   ===================================================== */
+(function mobileMenu(){
+    const hamburger = document.getElementById('hamburger');
+    const mobileContainer = document.getElementById('mobileMenuContainer');
+    let open = false;
+
+    function buildMenu(){
+        const menu = document.createElement('div');
+        menu.className = 'mobile-menu';
+        menu.innerHTML = `
+            <a href="#o-co-chodzi">O co chodzi</a>
+            <a href="#co-znajdziesz">Co znajdziesz</a>
+            <a href="#dla-kogo">Dla kogo</a>
+        `;
+        menu.addEventListener('click', ()=> toggleMenu(false));
+        return menu;
+    }
+
+    function toggleMenu(force){
+        open = typeof force === 'boolean' ? force : !open;
+        mobileContainer.innerHTML = '';
+
+        if(open){
+            mobileContainer.appendChild(buildMenu());
+            mobileContainer.setAttribute('aria-hidden', 'false');
+        } else {
+            mobileContainer.setAttribute('aria-hidden', 'true');
+        }
+    }
+
+    hamburger.addEventListener('click', ()=> toggleMenu());
+
+    addEventListener('resize', ()=>{
+        if(innerWidth > 720) toggleMenu(false);
+    });
+})();
 </script>
 
 </body>
