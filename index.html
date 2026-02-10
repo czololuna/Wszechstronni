@@ -58,7 +58,23 @@
     <li>społeczność ludzi, którzy chcą więcej</li>
   </ul>
 </section>
+<section id="komentarze" class="fade">
+  <h2>💬 Komentarze</h2>
 
+  <div id="comments">
+    <form id="commentForm">
+      <input type="text" id="name" placeholder="Twoje imię" required>
+      <textarea id="text" placeholder="Twój komentarz" required></textarea>
+      <button type="submit">Dodaj komentarz</button>
+    </form>
+
+    <div id="commentList"></div>
+  </div>
+</section>
+
+<script type="module" src="firebase.js"></script>
+<script type="module" src="comments.js"></script>
+<script type="module" src="script.js"></script>
 <section id="dla-kogo" class="fade">
   <h2>🧭 Dla kogo?</h2>
   <p>Dla początkujących. Dla ambitnych. Dla tych, którzy chcą zrozumieć, a nie tylko kopiować.</p>
@@ -69,23 +85,6 @@
   <p>To miejsce będzie zapisem narzędzi i rozwiązań, które sam sprawdziłem w praktyce.</p>
 </section>
 
-<section id="spolecznosc" class="fade">
-  <h2>🤝 Społeczność</h2>
-  <p>Tu możesz zostawić swój komentarz, opinię lub doświadczenie.</p>
-</section>
-
-<section id="komentarze" class="fade">
-  <h2>💬 Komentarze</h2>
-
-  <div style="margin-bottom: 20px;">
-    <input id="commentInput" type="text" placeholder="Napisz komentarz..." style="width: 100%; padding: 12px; border-radius: 10px; border: none; outline: none; background: rgba(255,255,255,0.1); color: white;">
-  </div>
-
-  <button id="addComment" style="padding: 10px 20px; border: none; border-radius: 10px; background: #8fd3ff; color: black; font-weight: bold; cursor: pointer;">
-    Dodaj komentarz
-  </button>
-
-  <div id="commentsList" style="margin-top: 25px;"></div>
 </section>
 
 </main>
