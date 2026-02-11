@@ -8,7 +8,9 @@
   --radius: 16px;
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   margin: 0;
@@ -19,6 +21,7 @@ body {
   line-height: 1.6;
 }
 
+/* ====== Gwiazdy ====== */
 #starsCanvas {
   position: fixed;
   inset: 0;
@@ -26,6 +29,7 @@ body {
   pointer-events: none;
 }
 
+/* ====== Overlay ====== */
 .overlay {
   position: fixed;
   inset: 0;
@@ -34,6 +38,7 @@ body {
   z-index: 1;
 }
 
+/* ====== Nawigacja ====== */
 nav {
   position: sticky;
   top: 0;
@@ -47,7 +52,11 @@ nav {
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-nav .nav-left { display: flex; align-items: center; gap: 10px; }
+nav .nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
 nav a {
   color: var(--text);
@@ -57,8 +66,11 @@ nav a {
   transition: 0.2s;
 }
 
-nav a:hover { opacity: 0.7; }
+nav a:hover {
+  opacity: 0.7;
+}
 
+/* ====== Hamburger ====== */
 #hamburger {
   display: none;
   width: 26px;
@@ -75,6 +87,7 @@ nav a:hover { opacity: 0.7; }
   border-radius: 999px;
 }
 
+/* ====== Menu mobilne ====== */
 #mobileMenuContainer {
   position: fixed;
   inset: 0;
@@ -96,6 +109,13 @@ nav a:hover { opacity: 0.7; }
   gap: 18px;
 }
 
+.mobile-menu a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+/* ====== Header ====== */
 header {
   text-align: center;
   padding: 80px 20px 40px;
@@ -103,11 +123,23 @@ header {
   position: relative;
 }
 
-h1 { font-size: 3rem; margin: 0; letter-spacing: 2px; }
+h1 {
+  font-size: 3rem;
+  margin: 0;
+  letter-spacing: 2px;
+}
 
-.tagline { font-size: 1.2rem; opacity: 0.85; }
+.tagline {
+  font-size: 1.2rem;
+  opacity: 0.85;
+}
 
-main { position: relative; z-index: 2; padding: 20px; }
+/* ====== Sekcje ====== */
+main {
+  position: relative;
+  z-index: 2;
+  padding: 20px;
+}
 
 section {
   max-width: 900px;
@@ -127,8 +159,20 @@ section.visible {
   transform: translateY(0);
 }
 
-h2 { color: var(--accent); margin-top: 0; }
+h2 {
+  color: var(--accent);
+  margin-top: 0;
+}
 
+/* ====== Komentarze ====== */
+.comment {
+  padding: 10px;
+  margin-bottom: 10px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+}
+
+/* ====== Stopka ====== */
 footer {
   text-align: center;
   padding: 30px;
@@ -138,7 +182,12 @@ footer {
   position: relative;
 }
 
+/* ====== Mobile ====== */
 @media (max-width: 720px) {
-  nav .nav-links { display: none; }
-  #hamburger { display: flex; }
+  nav .nav-links {
+    display: none;
+  }
+  #hamburger {
+    display: flex;
+  }
 }
