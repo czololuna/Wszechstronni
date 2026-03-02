@@ -10,7 +10,9 @@
   <meta property="og:title" content="Wszechstronni – Nauka • Rozwój • Zarabianie">
   <meta property="og:description" content="Projekt dla osób, które chcą zacząć od zera i rozwijać się w internecie.">
   <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/og-image.jpg">
 
+  <link rel="icon" href="assets/favicon.png" type="image/png">
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -19,40 +21,42 @@
 <canvas id="starsCanvas"></canvas>
 <div class="overlay"></div>
 
-<div id="mobileMenuContainer" aria-hidden="true"></div>
-
-<nav>
+<nav class="nav">
   <div class="nav-left">
     <strong>🌌 Wszechstronni</strong>
   </div>
-  <div class="nav-links">
+
+  <div class="nav-links" id="desktopMenu">
     <a href="#o-co-chodzi">O co chodzi</a>
     <a href="#co-znajdziesz">Co znajdziesz</a>
     <a href="#dla-kogo">Dla kogo</a>
     <a href="#moje-testy">Moje testy</a>
     <a href="#spolecznosc">Społeczność</a>
   </div>
-  <div id="hamburger" aria-label="Menu">
+
+  <button id="hamburger" aria-label="Menu" class="hamburger">
     <span></span><span></span><span></span>
-  </div>
+  </button>
 </nav>
 
-<header>
+<div id="mobileMenuContainer" class="mobile-menu" aria-hidden="true"></div>
+
+<header class="header">
   <h1>Wszechstronni</h1>
-  <div class="tagline">Nauka • Rozwój • Zarabianie</div>
+  <p class="tagline">Nauka • Rozwój • Zarabianie</p>
 </header>
 
 <main>
 
-<section id="o-co-chodzi" class="fade">
+<section id="o-co-chodzi" class="section fade">
   <h2>🌌 O co chodzi?</h2>
   <p>Wszechstronni to projekt dla osób, które chcą zacząć od zera i krok po kroku budować coś własnego w internecie — bez ściemy, bez obietnic szybkich pieniędzy.</p>
   <p>To przestrzeń do nauki, testowania pomysłów i wspólnego rozwoju.</p>
 </section>
 
-<section id="co-znajdziesz" class="fade">
+<section id="co-znajdziesz" class="section fade">
   <h2>🚀 Co tu znajdziesz?</h2>
-  <ul>
+  <ul class="list">
     <li>praktyczną naukę krok po kroku</li>
     <li>realne pomysły na zarabianie</li>
     <li>doświadczenia bez koloryzowania</li>
@@ -60,57 +64,55 @@
   </ul>
 </section>
 
-<section id="dla-kogo" class="fade">
+<section id="dla-kogo" class="section fade">
   <h2>🧭 Dla kogo?</h2>
   <p>Dla początkujących. Dla ambitnych. Dla tych, którzy chcą zrozumieć, a nie tylko kopiować.</p>
 </section>
 
-<section id="narzedzia" class="fade">
+<section id="narzedzia" class="section fade">
   <h2>🧰 Narzędzia</h2>
   <p>To miejsce będzie zapisem narzędzi i rozwiązań, które sam sprawdziłem w praktyce. Bez sponsorów, bez wciskania — tylko to, co faktycznie miało sens.</p>
 </section>
 
-<section id="moje-testy" class="fade">
+<section id="moje-testy" class="section fade">
   <h2>🧪 Moje testy</h2>
   <p>Tutaj zapisuję swoje realne testy zarabiania w internecie. Bez obietnic, bez koloryzowania — tylko to, co faktycznie zrobiłem i jakie były efekty.</p>
 
-  <article style="margin-top: 20px; padding: 18px; border-radius: 12px; background: rgba(0,0,0,0.35);">
-    <h3 style="margin-top:0;">Test 1: Prosta grafika w Canva</h3>
+  <article class="test-card">
+    <h3>Test 1: Prosta grafika w Canva</h3>
     <p><strong>Status:</strong> w przygotowaniu</p>
-    <p style="opacity:0.8; font-size:0.95rem;">
+    <p class="test-desc">
       Ten test będzie opisem pierwszej próby zarabiania na prostych grafikach tworzonych w Canva i wystawianych na ogłoszeniach.
     </p>
   </article>
 </section>
 
-<section id="spolecznosc" class="fade">
+<section id="spolecznosc" class="section fade">
   <h2>🤝 Społeczność</h2>
   <p>Tu możesz zostawić swój komentarz, opinię lub doświadczenie.</p>
 </section>
 
-<section id="komentarze" class="fade">
+<section id="komentarze" class="section fade">
   <h2>💬 Komentarze</h2>
 
-  <div style="margin-bottom: 20px;">
+  <div class="comment-input-wrapper">
     <input 
       id="commentInput" 
       type="text" 
       placeholder="Napisz komentarz..." 
-      style="width: 100%; padding: 12px; border-radius: 10px; border: none; outline: none; background: rgba(255,255,255,0.1); color: white;">
+      class="comment-input">
   </div>
 
-  <button 
-    id="addComment" 
-    style="padding: 10px 20px; border: none; border-radius: 10px; background: #8fd3ff; color: black; font-weight: bold; cursor: pointer;">
+  <button id="addComment" class="comment-button">
     Dodaj komentarz
   </button>
 
-  <div id="commentsList" style="margin-top: 25px;"></div>
+  <div id="commentsList" class="comments-list"></div>
 </section>
 
 </main>
 
-<footer>
+<footer class="footer">
   © Wszechstronni — droga przez naukę, nie skróty
 </footer>
 
