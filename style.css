@@ -84,3 +84,33 @@ button {
 button:hover {
     opacity: 0.85;
 }
+.section-content {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1px solid #222;
+    margin-top: 20px;
+}
+
+.section-content h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.section-content ul {
+    margin: 15px 0;
+    padding-left: 20px;
+}
+
+.section-content li {
+    margin-bottom: 8px;
+    color: var(--subtext);
+}
+
+.test-item {
+    background: #111;
+    padding: 15px;
+    border-radius: var(--radius);
+    margin-bottom: 15px;
+    border: 1px solid #222;
+}
