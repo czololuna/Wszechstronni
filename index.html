@@ -1,121 +1,38 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <title>Wszechstronni – Nauka • Rozwój • Zarabianie</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <meta name="description" content="Wszechstronni – projekt dla osób, które chcą uczyć się, testować i zarabiać w internecie, zaczynając od zera. Bez ściemy, bez obietnic, tylko realna droga.">
-  <meta name="keywords" content="zarabianie online, nauka, rozwój, internet, praca zdalna, narzędzia, pomysły">
-  <meta property="og:title" content="Wszechstronni – Nauka • Rozwój • Zarabianie">
-  <meta property="og:description" content="Projekt dla osób, które chcą zacząć od zera i rozwijać się w internecie.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="assets/og-image.jpg">
-
-  <link rel="icon" href="assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wszechstronni Start</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<canvas id="starsCanvas"></canvas>
-<div class="overlay"></div>
+    <header>
+        <h1>Wszechstronni Start</h1>
+        <p>Prosty początek dla ludzi, którzy zaczynają od zera.</p>
+    </header>
 
-<nav class="nav">
-  <div class="nav-left">
-    <strong>🌌 Wszechstronni</strong>
-  </div>
+    <main>
+        <section class="card">
+            <h2>Start od zera</h2>
+            <p>Najprostszy możliwy przewodnik, który usuwa chaos i pokazuje pierwszy krok.</p>
+            <button onclick="openSection('start')">Otwórz</button>
+        </section>
 
-  <div class="nav-links" id="desktopMenu">
-    <a href="#o-co-chodzi">O co chodzi</a>
-    <a href="#co-znajdziesz">Co znajdziesz</a>
-    <a href="#dla-kogo">Dla kogo</a>
-    <a href="#moje-testy">Moje testy</a>
-    <a href="#spolecznosc">Społeczność</a>
-  </div>
+        <section class="card">
+            <h2>Moje testy</h2>
+            <p>Realne doświadczenia, bez ściemy. To, co naprawdę działa.</p>
+            <button onclick="openSection('tests')">Otwórz</button>
+        </section>
 
-  <button id="hamburger" aria-label="Menu" class="hamburger">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
+        <section class="card">
+            <h2>Narzędzia</h2>
+            <p>Proste, praktyczne mini‑narzędzia dla początkujących.</p>
+            <button onclick="openSection('tools')">Otwórz</button>
+        </section>
+    </main>
 
-<div id="mobileMenuContainer" class="mobile-menu" aria-hidden="true"></div>
-
-<header class="header">
-  <h1>Wszechstronni</h1>
-  <p class="tagline">Nauka • Rozwój • Zarabianie</p>
-</header>
-
-<main>
-
-<section id="o-co-chodzi" class="section fade">
-  <h2>🌌 O co chodzi?</h2>
-  <p>Wszechstronni to projekt dla osób, które chcą zacząć od zera i krok po kroku budować coś własnego w internecie — bez ściemy, bez obietnic szybkich pieniędzy.</p>
-  <p>To przestrzeń do nauki, testowania pomysłów i wspólnego rozwoju.</p>
-</section>
-
-<section id="co-znajdziesz" class="section fade">
-  <h2>🚀 Co tu znajdziesz?</h2>
-  <ul class="list">
-    <li>praktyczną naukę krok po kroku</li>
-    <li>realne pomysły na zarabianie</li>
-    <li>doświadczenia bez koloryzowania</li>
-    <li>społeczność ludzi, którzy chcą więcej</li>
-  </ul>
-</section>
-
-<section id="dla-kogo" class="section fade">
-  <h2>🧭 Dla kogo?</h2>
-  <p>Dla początkujących. Dla ambitnych. Dla tych, którzy chcą zrozumieć, a nie tylko kopiować.</p>
-</section>
-
-<section id="narzedzia" class="section fade">
-  <h2>🧰 Narzędzia</h2>
-  <p>To miejsce będzie zapisem narzędzi i rozwiązań, które sam sprawdziłem w praktyce. Bez sponsorów, bez wciskania — tylko to, co faktycznie miało sens.</p>
-</section>
-
-<section id="moje-testy" class="section fade">
-  <h2>🧪 Moje testy</h2>
-  <p>Tutaj zapisuję swoje realne testy zarabiania w internecie. Bez obietnic, bez koloryzowania — tylko to, co faktycznie zrobiłem i jakie były efekty.</p>
-
-  <article class="test-card">
-    <h3>Test 1: Prosta grafika w Canva</h3>
-    <p><strong>Status:</strong> w przygotowaniu</p>
-    <p class="test-desc">
-      Ten test będzie opisem pierwszej próby zarabiania na prostych grafikach tworzonych w Canva i wystawianych na ogłoszeniach.
-    </p>
-  </article>
-</section>
-
-<section id="spolecznosc" class="section fade">
-  <h2>🤝 Społeczność</h2>
-  <p>Tu możesz zostawić swój komentarz, opinię lub doświadczenie.</p>
-</section>
-
-<section id="komentarze" class="section fade">
-  <h2>💬 Komentarze</h2>
-
-  <div class="comment-input-wrapper">
-    <input 
-      id="commentInput" 
-      type="text" 
-      placeholder="Napisz komentarz..." 
-      class="comment-input">
-  </div>
-
-  <button id="addComment" class="comment-button">
-    Dodaj komentarz
-  </button>
-
-  <div id="commentsList" class="comments-list"></div>
-</section>
-
-</main>
-
-<footer class="footer">
-  © Wszechstronni — droga przez naukę, nie skróty
-</footer>
-
-<script src="script.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
