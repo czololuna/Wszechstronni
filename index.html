@@ -8,38 +8,50 @@
 </head>
 <body>
 
-    <header>
-        <h1>Wszechstronni Start</h1>
-        <p>Prosty początek dla ludzi, którzy zaczynają od zera.</p>
+    <header class="site-header">
+        <div class="container">
+            <h1>Wszechstronni Start</h1>
+            <p>Prosty początek dla ludzi, którzy zaczynają od zera.</p>
+        </div>
     </header>
 
-    <main>
+    <main class="container">
         <section class="card">
             <h2>Start od zera</h2>
             <p>Najprostszy możliwy przewodnik, który usuwa chaos i pokazuje pierwszy krok.</p>
-            <button onclick="openSection('start')">Otwórz</button>
+            <button class="btn" onclick="openSection('start')">Otwórz</button>
         </section>
 
         <section class="card">
             <h2>Moje testy</h2>
             <p>Realne doświadczenia, bez ściemy. To, co naprawdę działa.</p>
-            <button onclick="openSection('tests')">Otwórz</button>
+            <button class="btn" onclick="openSection('tests')">Otwórz</button>
         </section>
 
         <section class="card">
             <h2>Narzędzia</h2>
             <p>Proste, praktyczne mini‑narzędzia dla początkujących.</p>
-            <button onclick="openSection('tools')">Otwórz</button>
+            <button class="btn" onclick="openSection('tools')">Otwórz</button>
+        </section>
+
+        <!-- Formularz sprawdzania kodów -->
+        <section class="card" id="code-check" style="margin-top: 32px;">
+            <h2>Sprawdź kod</h2>
+            <input id="codeInput" type="text" placeholder="Wpisz kod" class="input">
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button class="btn" onclick="redeemCode()">Sprawdź</button>
+                <button class="btn ghost" onclick="clearCode()">Wyczyść</button>
+            </div>
+            <p id="result" class="result"></p>
+            <p class="hint">Uwaga: backend musi być uruchomiony w Termuxie, adres IP w skrypcie musi być aktualny.</p>
         </section>
     </main>
 
-    <!-- FORMULARZ DO SPRAWDZANIA KODÓW -->
-    <div style="max-width: 300px; margin: 40px auto; text-align: center;">
-        <h2>Sprawdź kod</h2>
-        <input id="codeInput" type="text" placeholder="Wpisz kod" style="padding: 10px; width: 100%; margin-bottom: 10px;">
-        <button onclick="redeemCode()" style="padding: 10px 20px;">Sprawdź</button>
-        <p id="result"></p>
-    </div>
+    <footer class="site-footer">
+        <div class="container">
+            <small>Wszechstronni • Backend lokalny w Termuxie</small>
+        </div>
+    </footer>
 
     <script src="app.js"></script>
 </body>
