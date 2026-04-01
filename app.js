@@ -1,3 +1,4 @@
+
 // Prosty frontend logic
 const API_BASE = "http://192.168.0.152:5000"; // <- Upewnij się, że to Twój adres z Termuxa
 
