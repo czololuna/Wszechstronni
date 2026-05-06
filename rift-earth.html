@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚔️ Rift-Earth - Interaktywny Symulator Systemu Atrybutów</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen p-4">
+
+<!-- HEADER -->
+<div class="text-center mb-6">
+  <h1 class="text-3xl font-black tracking-widest text-blue-400 mb-1">⚔️ RIFT-EARTH</h1>
+  <p class="text-slate-400 text-sm">Interaktywny Symulator Systemu Atrybutów</p>
+  <div class="mt-3 glass rounded-xl p-3 max-w-2xl mx-auto" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+    <p class="text-yellow-300 font-semibold text-sm">🔍 Pytanie do eksploracji:</p>
+    <p class="text-slate-300 text-sm mt-1">Jak zmiana jednej statystyki wpływa na całą jednostkę? Czy Shadowflare z wysoką FAZĄ może pokonać Valkyrie z wysokim MORALE?</p>
+  </div>
+</div>
+
+<!-- MAIN TABS -->
+<div class="max-w-6xl mx-auto">
+  <div class="flex gap-1 mb-4 glass rounded-xl p-1 overflow-x-auto" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+    <button class="tab-btn active flex-1 py-2 px-3 rounded-lg text-sm font-semibold whitespace-nowrap" onclick="switchTab('sandbox')">🧪 Piaskownica</button>
+    <button class="tab-btn flex-1 py-2 px-3 rounded-lg text-sm font-semibold whitespace-nowrap" onclick="switchTab('combat')">⚔️ Symulacja Walki</button>
+    <button class="tab-btn flex-1 py-2 px-3 rounded-lg text-sm font-semibold whitespace-nowrap" onclick="switchTab('factions')">🏴 Frakcje</button>
+    <button class="tab-btn flex-1 py-2 px-3 rounded-lg text-sm font-semibold whitespace-nowrap" onclick="switchTab('scaling')">📈 Skalowanie</button>
+  </div>
+
+  <!-- ===== TAB: SANDBOX ===== -->
+  <div id="tab-sandbox" class="section-panel active">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+      <!-- LEFT: Unit Builder -->
+      <div class="lg:col-span-1 glass rounded-xl p-4" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+        <h2 class="font-bold text-blue-300 mb-3 text-sm uppercase tracking-wider">🛠 Kreator Jednostki</h2>
+
+        <div class="mb-3">
+          <label class="text-xs text-slate-400">Frakcja</label>
+          <select id="sb-faction" class="w-full mt-1" onchange="updateSandbox()" style="background: #1e293b; border: 1px solid rgba(255,255,255,0.2); color: #e2e8f0; padding: 6px 10px; border-radius: 6px;">
+            <option value="valkyria">Valkyria (Force)</option>
+            <option value="maglander">Maglander (Astral)</option>
+            <option value="vanguard">Vanguard (Core)</option>
+            <option value="shadowflare">Shadowflare (Phase)</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="text-xs text-slate-400">Typ jednostki</label>
+          <select id="sb-type" class="w-full mt-1" onchange="updateSandbox()" style="background: #1e293b; border: 1px solid rgba(255,255,255,0.2); color: #e2e8f0; padding: 6px 10px; border-radius: 6px;">
+            <option value="hero">Bohater (poz. 1-10)</option>
+            <option value="unit">Jednostka (poz. 1-5)</option>
+            <option value="structure">Struktura (poz. 1-3)</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="text-xs text-slate-400">Poziom: <span id="sb-level-val" class="text-blue-300 font-bold">1</span></label>
+          <input type="range" id="sb-level" min="1" max="10" value="1" oninput="updateSandbox()" style="width: 100%; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.15); outline: none;">
+        </div>
+
+        <hr class="border-slate-700 my-3">
+        <p class="text-xs text-slate-400 mb-2 uppercase tracking-wider">Atrybuty Bazowe</p>
+
+        <div id="sb-sliders"></div>
+      </div>
+
+      <!-- MIDDLE: Derived Stats -->
+      <div class="lg:col-span-1 glass rounded-xl p-4" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+        <h2 class="font-bold text-green-300 mb-3 text-sm uppercase tracking-wider">📊 Statystyki Pochodne</h2>
+        <div id="sb-derived"></div>
+
+        <hr class="border-slate-700 my-3">
+        <h3 class="text-xs text-slate-400 uppercase tracking-wider mb-2">Statystyki Drugorzędne</h3>
+        <div id="sb-secondary"></div>
+
+        <hr class="border-slate-700 my-3">
+        <h3 class="text-xs text-slate-400 uppercase tracking-wider mb-2">Statystyka Frakcyjna</h3>
+        <div id="sb-faction-stat"></div>
+      </div>
+
+      <!-- RIGHT: Radar Chart -->
+      <div class="lg:col-span-1 glass rounded-xl p-4" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+        <h2 class="font-bold text-purple-300 mb-3 text-sm uppercase tracking-wider">🕸 Profil Jednostki</h2>
+        <div class="chart-wrap" style="position: relative; min-height: 220px; max-height: 320px; margin-bottom: 1rem;">
+          <canvas id="radarChart"></canvas>
+        </div>
+        <div id="sb-summary" class="mt-2 text-xs text-slate-400 leading-relaxed"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TAB: COMBAT ===== -->
+  <div id="tab-combat" class="section-panel">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+
+      <!-- Unit A -->
+      <div class="glass rounded-xl p-4 border-l-4 border-blue-500" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+        <h2 class="font-bold text-blue-300 mb-3 text-sm">⚔️ Jednostka A</h2>
+        <div class="grid grid-cols-2 gap-2 mb-2">
+          <div>
+            <label class="text-xs text-slate-400">Frakcja</label>
+            <select id="ca-faction" class="w-full mt-1" onchange="updateCombatPreviews()" style="background: #1e293b; border: 1px solid rgba(255,255,255,0.2); color: #e2e8f0; padding: 6px 10px; border-radius: 6px;">
+              <option value="valkyria">Valkyria</option>
+              <option value="maglander">Maglander</option>
+              <option value="vanguard">Vanguard</option>
+              <option value="shadowflare">Shadowflare</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs text-slate-400">Poziom</label>
+            <input type="range" id="ca-level" min="1" max="10" value="5" oninput="updateCombatPreviews()" class="mt-2" style="width: 100%; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.15); outline: none;">
+            <span class="text-xs text-blue-300" id="ca-level-val">5</span>
+          </div>
+        </div>
+        <div id="ca-sliders"></div>
+        <div id="ca-preview" class="mt-2"></div>
+      </div>
+
+      <!-- Unit B -->
+      <div class="glass rounded-xl p-4 border-l-4 border-orange-500" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+        <h2 class="font-bold text-orange-300 mb-3 text-sm">🛡 Jednostka B</h2>
+        <div class="grid grid-cols-2 gap-2 mb-2">
+          <div>
+            <label class="text-xs text-slate-400">Frakcja</label>
+            <select id="cb-faction" class="w-full mt-1" onchange="updateCombatPreviews()" style="background: #1e293b; border: 1px solid rgba(255,255,255,0.2); color: #e2e8f0; padding: 6px 10px; border-radius: 6px;">
+              <option value="valkyria">Valkyria</option>
+              <option value="maglander">Maglander</option>
+              <option value="vanguard">Vanguard</option>
+              <option value="shadowflare" selected>Shadowflare</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs text-slate-400">Poziom</label>
+            <input type="range" id="cb-level" min="1" max="10" value="5" oninput="updateCombatPreviews()" class="mt-2" style="width: 100%; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.15); outline: none;">
+            <span class="text-xs text-orange-300" id="cb-level-val">5</span>
+          </div>
+        </div>
+        <div id="cb-sliders"></div>
+        <div id="cb-preview" class="mt-2"></div>
+      </div>
+    </div>
+
+    <!-- Combat Arena -->
+    <div class="glass rounded-xl p-4" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="font-bold text-yellow-300 text-sm uppercase tracking-wider">⚡ Arena Walki</h2>
+        <button onclick="runCombat()" class="bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-2 px-4 rounded-lg text-sm transition-all">▶ Symuluj Walkę</button>
+      </div>
+
+      <!-- HP Bars -->
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-blue-300 font-bold">Jednostka A</span>
+            <span id="ca-hp-text" class="text-slate-300">-</span>
+          </div>
+          <div class="stat-bar-bg mb-1" style="background: rgba(255,255,255,0.1); border-radius: 4px; height: 8px; overflow: hidden;"><div id="ca-hp-bar" class="stat-bar-fill bg-blue-500" style="width:100%; height: 100%; border-radius: 4px; transition: width 0.4s ease;"></div></div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-slate-400">Tarcza</span>
+            <span id="ca-sh-text" class="text-slate-300">-</span>
+          </div>
+          <div class="stat-bar-bg" style="background: rgba(255,255,255,0.1); border-radius: 4px; height: 8px; overflow: hidden;"><div id="ca-sh-bar" class="stat-bar-fill bg-cyan-400" style="width:100%; height: 100%; border-radius: 4px; transition: width 0.4s ease;"></div></div>
+        </div>
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-orange-300 font-bold">Jednostka B</span>
+            <span id="cb-hp-text" class="text-slate-300">-</span>
+          </div>
+          <div class="stat-bar-bg mb-1" style="background: rgba(255,255,255,0.1); border-radius: 4px; height: 8px; overflow: hidden;"><div id="cb-hp-bar" class="stat-bar-fill bg-orange-500" style="width:100%; height: 100%; border-radius: 4px; transition: width 0.4s ease;"></div></div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-slate-400">Tarcza</span>
+            <span id="cb-sh-text" class="text-slate-300">-</span>
+          </div>
+          <div class="stat-bar-bg" style="background: rgba(255,255,255,0.1); border-radius: 4px; height: 8px; overflow: hidden;"><div id="cb-sh-bar" class="stat-bar-fill bg-yellow-400" style="width:100%; height: 100%; border-radius: 4px; transition: width 0.4s ease;"></div></div>
+        </div>
+      </div>
+
+      <div class="chart-wrap" style="position: relative; min-height:180px; max-height:220px;">
+        <canvas id="combatChart"></canvas>
+      </div>
+
+      <div id="combat-result" class="text-center font-bold text-lg mb-2 hidden"></div>
+      <div class="combat-log glass rounded-lg p-2" id="combat-log" style="max-height: 180px; overflow-y: auto; font-size: 0.78rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+        <p class="text-slate-500 text-xs">Naciśnij "Symuluj Walkę" aby rozpocząć...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TAB: FACTIONS ===== -->
+  <div id="tab-factions" class="section-panel">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+      <!-- Faction Cards -->
+      <div class="space-y-3">
+        <div class="glass rounded-xl p-4 border-l-4 border-blue-500 glow-blue" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); box-shadow: 0 0 20px rgba(79,142,247,0.3);">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-2xl">🛡</span>
+            <div>
+              <h3 class="font-bold text-blue-300">VALKYRIA</h3>
+              <span class="badge bg-blue-900 text-blue-300" style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 0.7rem; font-weight: 700;">Energia: Force</span>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 mb-2">Frakcja honoru i siły. Walczą w zwartych formacjach, wzmacniając się nawzajem.</p>
+          <div class="bg-blue-900/30 rounded-lg p-2">
+            <p class="text-xs font-bold text-blue-300 mb-1">⭐ MORALE</p>
+            <p class="text-xs text-slate-400">Rośnie gdy: bohater blisko, wygrane walki, sztandar stoi</p>
+            <div class="mt-2">
+              <label class="text-xs text-slate-500">Poziom Morale: <span id="morale-val" class="text-blue-300 font-bold">50</span></label>
+              <input type="range" id="morale-slider" min="0" max="100" value="50" oninput="updateFactionSim('valkyria')" style="width: 100%; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.15); outline: none;">
+              <p class="text-xs text-blue-200 mt-1">Bonus: +<span id="morale-bonus">25</span>% ATK i DEF</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass rounded-xl p-4 border-l-4 border-purple-500 glow-purple" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); box-shadow: 0 0 20px rgba(168,85,247,0.3);">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-2xl">🌀</span>
+            <div>
+              <h3 class="font-bold text-purple-300">MAGLANDER</h3>
+              <span class="badge bg-purple-900 text-purple-300" style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 0.7rem; font-weight: 700;">Energia: Astral</span>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 mb-2">Mistrzowie czasu i przestrzeni. Manipulują rzeczywistością przez portale astralne.</p>
+          <div class="bg-purple-900/30 rounded-lg p-2">
+            <p class="text-xs font-bold text-purple-300 mb-1">⭐ ENTROPIA</p>
+            <p class="text-xs text-slate-400">Rośnie gdy: otwierasz portale, manipulujesz czasem</p>
+            <div class="mt-2">
+              <label class="text-xs text-slate-500">Poziom Entropii: <span id="entropy-val" class="text-purple-300 font-bold">50</span></label>
+              <input type="range" id="entropy-slider" min="0" max="100" value="50" oninput="updateFactionSim('maglander')" style="width: 100%; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.15); outline: none;">
+              <p class="text-xs text-purple-200 mt-1">Bonus: +<span id="entropy-bonus">25</span>% moce astralne</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass rounded-xl p-4 border-l-4 border-green-500 glow-green" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); box-shadow: 0 0 20px rgba(34,197,94,0.3);">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-2xl">🏗</span>
+            <div>
+              <h3 class="font-bold text-green-300">VANGUARD</h3>
+              <span class="badge bg-green-900 text-green-300" style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 0.7rem; font-weight: 700;">Energia: Core</span>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 mb-2">Inżynierowie pola bitwy. Budują fortyfikacje i tarcze energetyczne.</p>
+          <div class="bg-green-900/30 rounded-lg p-2">
+            <p class="text-xs font-bold text-green-300 mb-1">⭐ STABILNOŚĆ</p>
+            <p class="text-xs text-slate-400">Rośnie gdy: formacja aktywna, struktury działają</p>
+            <div class="mt-2">
+              <label class="text-xs text-slate-500">Poziom Stabilności: <span id="stability-val" class="text-green-300 font-bold">50</span></label>
+              <input type="range" id="stability-slider" min="0" max="100" value="50" oninput="updateFactionSim('vanguard')" style="width: 100%; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.15); outline: none;">
+              <p class="text-xs text-green-200 mt-1">Bonus: +<span id="stability-bonus">25</span>% tarcze i struktury</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass rounded-xl p-4 border-l-4 border-orange-500 glow-orange" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); box-shadow: 0 0 20px rgba(249,115,22,0.3);">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-2xl">👤</span>
+            <div>
+              <h3 class="font-bold text-orange-300">SHADOWFLARE</h3>
+              <span class="badge bg-orange-900 text-orange-300" style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 0.7rem; font-weight: 700;">Energia: Phase</span>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 mb-2">Mistrzowie cienia i teleportacji. Uderzają z nieoczekiwanych kierunków.</p>
+          <div class="bg-orange-900/30 rounded-lg p-2">
+            <p class="text-xs font-bold text-orange-300 mb-1">⭐ FAZA</p>
+            <p class="text-xs text-slate-400">Rośnie gdy: w cieniu, używasz teleportów</p>
+            <div class="mt-2">
+              <label class="text-xs text-slate-500">Poziom Fazy: <span id="phase-val" class="text-orange-300 font-bold">50</span></label>
+              <input type="range" id="phase-slider" min="0" max="100" value="50" oninput="updateFactionSim('shadowflare')" style="width: 100%; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.15); outline: none;">
+              <p class="text-xs text-orange-200 mt-1">Szansa unik: <span id="phase-bonus">25</span>% | Fazowanie: <span id="phase-bonus2">12</span>%</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Faction Comparison Chart -->
+      <div class="glass rounded-xl p-4" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+        <h2 class="font-bold text-slate-300 mb-3 text-sm uppercase tracking-wider">📊 Porównanie Frakcji</h2>
+        <div class="chart-wrap" style="position: relative; min-height: 220px; max-height: 320px; margin-bottom: 1rem;">
+          <canvas id="factionChart"></canvas>
+        </div>
+        <div class="mt-3 glass rounded-lg p-3" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+          <p class="text-xs font-bold text-slate-300 mb-2">🔑 Zasięg Ataków</p>
+          <div class="space-y-1">
+            <div class="flex items-center gap-2 text-xs">
+              <span class="w-20 text-slate-400">Krótki (1-2)</span>
+              <div class="flex gap-1">
+                <span class="badge bg-blue-900 text-blue-300" style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 0.7rem; font-weight: 700;">Valkyria</span>
+                <span class="badge bg-green-900 text-green-300" style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 0.7rem; font-weight: 700;">Vanguard</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="w-20 text-slate-400">Średni (3-5)</span>
+              <div class="flex gap-1">
+                <span class="badge bg-purple-900 text-purple-300" style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 0.7rem; font-weight: 700;">Maglander</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="w-20 text-slate-400">Specjalny</span>
+              <div class="flex gap-1">
+                <span class="badge bg-orange-900 text-orange-300" style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 0.7rem; font-weight: 700;">Shadowflare</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TAB: SCALING ===== -->
+  <div id="tab-scaling" class="section-panel">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div class="glass rounded-xl p-4" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+        <h2 class="font-bold text-slate-300 mb-3 text-sm uppercase tracking-wider">📈 Krzywe Skalowania</h2>
+        <div class="mb-3 flex gap-2 flex-wrap">
+          <button onclick="setScalingView('all')" id="scale-all" class="text-xs px-3 py-1 rounded-full bg-slate-700 hover:bg-slate-600 transition-all">Wszystkie</button>
+          <button onclick="setScalingView('hero')" id="scale-hero" class="text-xs px-3 py-1 rounded-full bg-blue-900 text-blue-300 hover:bg-blue-800 transition-all">Bohater (+5%/poz)</button>
+          <button onclick="setScalingView('unit')" id="scale-unit" class="text-xs px-3 py-1 rounded-full bg-green-900 text-green-300 hover:bg-green-800 transition-all">Jednostka (+3%/poz)</button>
+          <button onclick="setScalingView('structure')" id="scale-structure" class="text-xs px-3 py-1 rounded-full bg-orange-900 text-orange-300 hover:bg-orange-800 transition-all">Struktura (+10%/poz)</button>
+        </div>
+        <div class="chart-wrap" style="position: relative; min-height: 220px; max-height: 320px; margin-bottom: 1rem;">
+          <canvas id="scalingChart"></canvas>
+        </div>
+      </div>
+
+      <div class="glass rounded-xl p-4" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+        <h2 class="font-bold text-slate-300 mb-3 text-sm uppercase tracking-wider">🔢 Kalkulator Skalowania</h2>
+        <div class="space-y-3">
+          <div>
+            <label class="text-xs text-slate-400">Typ jednostki</label>
+            <select id="calc-type" class="w-full mt-1" onchange="updateScalingCalc()" style="background: #1e293b; border: 1px solid rgba(255,255,255,0.2); color: #e2e8f0; padding: 6px 10px; border-radius: 6px;">
+              <option value="hero">Bohater</option>
+              <option value="unit">Jednostka</option>
+              <option value="structure">Struktura</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs text-slate-400">Bazowa wartość statystyki</label>
+            <input type="number" id="calc-base" value="100" min="1" max="9999" oninput="updateScalingCalc()" class="w-full mt-1" style="background: #1e293b; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 6px 10px; font-size: 0.875rem; color: white;">
+          </div>
+          <div>
+            <label class="text-xs text-slate-400">Poziom: <span id="calc-level-val" class="text-yellow-300 font-bold">1</span></label>
+            <input type="range" id="calc-level" min="1" max="10" value="1" oninput="updateScalingCalc()" style="width: 100%; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.15); outline: none;">
+          </div>
+        </div>
+
+        <div id="scaling-result" class="mt-4 glass rounded-lg p-3 space-y-2" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);"></div>
+
+        <div class="mt-4 glass rounded-lg p-3" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+          <p class="text-xs font-bold text-yellow-300 mb-2">💡 Formuły Skalowania</p>
+          <div class="space-y-1 text-xs text-slate-400">
+            <p>🦸 Bohater: <span class="text-blue-300">Baza × (1 + 0.05 × (Poz-1))</span></p>
+            <p>⚔️ Jednostka: <span class="text-green-300">Baza × (1 + 0.03 × (Poz-1))</span></p>
+            <p>🏗 Struktura: <span class="text-orange-300">Baza × (1 + 0.10 × (Poz-1))</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formula Reference -->
+    <div class="glass rounded-xl p-4 mt-4" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+      <h2 class="font-bold text-slate-300 mb-3 text-sm uppercase tracking-wider">📐 Referencja Formuł</h2>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="bg-slate-800/50 rounded-lg p-3">
+          <p class="text-xs font-bold text-red-300 mb-1">❤️ HP</p>
+          <p class="text-xs text-slate-400">(Siła + Obrona) × Mod. Frakcji</p>
+        </div>
+        <div class="bg-slate-800/50 rounded-lg p-3">
+          <p class="text-xs font-bold text-cyan-300 mb-1">🛡 SH</p>
+          <p class="text-xs text-slate-400">Obrona × Mod. Energii Rift</p>
+        </div>
+        <div class="bg-slate-800/50 rounded-lg p-3">
+          <p class="text-xs font-bold text-yellow-300 mb-1">⚡ EN</p>
+          <p class="text-xs text-slate-400">Inteligencja × Mod. Frakcji</p>
+        </div>
+        <div class="bg-slate-800/50 rounded-lg p-3">
+          <p class="text-xs font-bold text-orange-300 mb-1">⚔️ DMG</p>
+          <p class="text-xs text-slate-400">ATK − DEF przeciwnika</p>
+        </div>
+        <div class="bg-slate-800/50 rounded-lg p-3">
+          <p class="text-xs font-bold text-green-300 mb-1">🛡 Redukcja</p>
+          <p class="text-xs text-slate-400">DEF × 0.5</p>
+        </div>
+        <div class="bg-slate-800/50 rounded-lg p-3">
+          <p class="text-xs font-bold text-purple-300 mb-1">🎯 CTRL</p>
+          <p class="text-xs text-slate-400">CTRL − FOC przeciwnika</p>
+        </div>
+        <div class="bg-slate-800/50 rounded-lg p-3">
+          <p class="text-xs font-bold text-blue-300 mb-1">🧠 CC Redukcja</p>
+          <p class="text-xs text-slate-400">FOC × 0.5</p>
+        </div>
+        <div class="bg-slate-800/50 rounded-lg p-3">
+          <p class="text-xs font-bold text-pink-300 mb-1">💥 Krytyk</p>
+          <p class="text-xs text-slate-400">5% szansa, 150% obrażeń</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  :root {
+    --valkyria: #4f8ef7;
+    --maglander: #a855f7;
+    --vanguard: #22c55e;
+    --shadowflare: #f97316;
+  }
+  body { background: #0a0e1a; color: #e2e8f0; font-family: 'Segoe UI', sans-serif; }
+  .glass { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+  .tab-btn { transition: all 0.3s; border-bottom: 2px solid transparent; }
+  .tab-btn.active { border-bottom-color: #60a5fa; color: #60a5fa; }
+  .faction-valkyria { border-color: var(--valkyria); }
+  .faction-maglander { border-color: var(--maglander); }
+  .faction-vanguard { border-color: var(--vanguard); }
+  .faction-shadowflare { border-color: var(--shadowflare); }
+  .stat-bar-bg { background: rgba(255,255,255,0.1); border-radius: 4px; height: 8px; overflow: hidden; }
+  .stat-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+  input[type=range] { -webkit-appearance: none; width: 100%; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.15); outline: none; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #60a5fa; cursor: pointer; }
+  .chart-wrap { position: relative; min-height: 220px; max-height: 320px; margin-bottom: 1rem; }
+  .combat-log { max-height: 180px; overflow-y: auto; font-size: 0.78rem; }
+  .combat-log::-webkit-scrollbar { width: 4px; }
+  .combat-log::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; }
+  .glow-blue { box-shadow: 0 0 20px rgba(79,142,247,0.3); }
+  .glow-purple { box-shadow: 0 0 20px rgba(168,85,247,0.3); }
+  .glow-green { box-shadow: 0 0 20px rgba(34,197,94,0.3); }
+  .glow-orange { box-shadow: 0 0 20px rgba(249,115,22,0.3); }
+  .pulse { animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+  .section-panel { display: none; }
+  .section-panel.active { display: block; }
+  select { background: #1e293b; border: 1px solid rgba(255,255,255,0.2); color: #e2e8f0; padding: 6px 10px; border-radius: 6px; }
+</style>
+
+<script>
+// ============================================================
+// CONFIGURATION & STATE
+// ============================================================
+const FACTION_CONFIG = {
+  valkyria:   { name: 'Valkyria',   color: '#4f8ef7', energy: 'Force',  hpMod: 1.2, enMod: 1.0, shMod: 1.1, uniqueStat: 'MORALE',      icon: '🛡' },
+  maglander:  { name: 'Maglander',  color: '#a855f7', energy: 'Astral', hpMod: 1.0, enMod: 1.4, shMod: 0.9, uniqueStat: 'ENTROPIA',    icon: '🌀' },
+  vanguard:   { name: 'Vanguard',   color: '#22c55e', energy: 'Core',   hpMod: 1.1, enMod: 1.1, shMod: 1.3, uniqueStat: 'STABILNOSC', icon: '🏗' },
+  shadowflare:{ name: 'Shadowflare',color: '#f97316', energy: 'Phase',  hpMod: 0.9, enMod: 1.2, shMod: 0.8, uniqueStat: 'FAZA',        icon: '👤' }
+};
+
+const SCALE_RATES = { hero: 0.05, unit: 0.03, structure: 0.10 };
+const MAX_LEVELS  = { hero: 10,   unit: 5,    structure: 3 };
+
+const BASE_ATTRS = [
+  { id: 'sila',        label: 'Siła',        min: 10, max: 100, def: 50, color: '#ef4444' },
+  { id: 'obrona',      label: 'Obrona',      min: 10, max: 100, def: 40, color: '#22c55e' },
+  { id: 'inteligencja',label: 'Inteligencja',min: 10, max: 100, def: 40, color: '#a855f7' },
+  { id: 'atk',         label: 'ATK',         min: 10, max: 100, def: 50, color: '#f97316' },
+  { id: 'spd',         label: 'SPD',         min: 10, max: 100, def: 50, color: '#eab308' },
+  { id: 'ctrl',        label: 'CTRL',        min: 0,  max: 100, def: 30, color: '#06b6d4' },
+  { id: 'foc',         label: 'FOC',         min: 0,  max: 100, def: 30, color: '#8b5cf6' }
+];
+
+let radarChart = null;
+let combatChart = null;
+let factionChart = null;
+let scalingChart = null;
+let combatRunning = false;
+
+// ============================================================
+// UTILITY FUNCTIONS
+// ============================================================
+function getVal(id) {
+  try {
+    const el = document.getElementById(id);
+    return el ? parseFloat(el.value) || 0 : 0;
+  } catch(e) { console.error('getVal error:', id, e); return 0; }
+}
+
+function setHTML(id, html) {
+  try {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = html;
+  } catch(e) { console.error('setHTML error:', id, e); }
+}
+
+function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+function getScaledValue(base, type, level) {
+  try {
+    const rate = SCALE_RATES[type] || 0.05;
+    return Math.round(base * (1 + rate * (level - 1)));
+  } catch(e) { return base; }
+}
+
+function calcHP(sila, obrona, faction) {
+  const mod = FACTION_CONFIG[faction] ? FACTION_CONFIG[faction].hpMod : 1.0;
+  return Math.round((sila + obrona) * mod);
+}
+
+function calcSH(obrona, faction) {
+  const mod = FACTION_CONFIG[faction] ? FACTION_CONFIG[faction].shMod : 1.0;
+  return Math.round(obrona * mod);
+}
+
+function calcEN(inteligencja, faction) {
+  const mod = FACTION_CONFIG[faction] ? FACTION_CONFIG[faction].enMod : 1.0;
+  return Math.round(inteligencja * mod);
+}
+
+function calcDamage(atk, defEnemy) {
+  const base = Math.max(1, atk - defEnemy * 0.5);
+  const isCrit = Math.random() < 0.05;
+  return { dmg: Math.round(isCrit ? base * 1.5 : base), crit: isCrit };
+}
+
+// ============================================================
+// SLIDER BUILDER
+// ============================================================
+function buildSliders(containerId, prefix, attrs, onchange) {
+  try {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = attrs.map(a => `
+      <div class="mb-2">
+        <div class="flex justify-between text-xs mb-1">
+          <span style="color:${a.color}">${a.label}</span>
+          <span id="${prefix}-${a.id}-val" class="font-bold text-white">${a.def}</span>
+        </div>
+        <input type="range" id="${prefix}-${a.id}" min="${a.min}" max="${a.max}" value="${a.def}"
+          oninput="document.getElementById('${prefix}-${a.id}-val').textContent=this.value; ${onchange}" style="width: 100%; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.15); outline: none;">
+      </div>
+    `).join('');
+  } catch(e) { console.error('buildSliders error:', e); }
+}
+
+function getSliderVals(prefix) {
+  const vals = {};
+  BASE_ATTRS.forEach(a => { vals[a.id] = getVal(`${prefix}-${a.id}`); });
+  return vals;
+}
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+function switchTab(tab) {
+  try {
+    document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    const btns = document.querySelectorAll('.tab-btn');
+    const tabMap = { sandbox: 0, combat: 1, factions: 2, scaling: 3 };
+    if (btns[tabMap[tab]]) btns[tabMap[tab]].classList.add('active');
+
+    setTimeout(() => {
+      if (tab === 'sandbox') updateSandbox();
+      if (tab === 'combat') { initCombatSliders(); updateCombatPreviews(); }
+      if (tab === 'factions') initFactionChart();
+      if (tab === 'scaling') { initScalingChart(); updateScalingCalc(); }
+    }, 80);
+  } catch(e) { console.error('switchTab error:', e); }
+}
+
+// ============================================================
+// SANDBOX TAB
+// ============================================================
+function initSandbox() {
+  buildSliders('sb-sliders', 'sb', BASE_ATTRS, 'updateSandbox()');
+  updateSandbox();
+}
+
+function updateSandbox() {
+  try {
+    const faction = document.getElementById('sb-faction').value;
+    const type    = document.getElementById('sb-type').value;
+    const levelEl = document.getElementById('sb-level');
+    const maxLvl  = MAX_LEVELS[type] || 10;
+    levelEl.max   = maxLvl;
+    const level   = clamp(parseInt(levelEl.value), 1, maxLvl);
+    levelEl.value = level;
+    document.getElementById('sb-level-val').textContent = level;
+
+    const raw = getSliderVals('sb');
+    const fc  = FACTION_CONFIG[faction];
+
+    const scaled = {};
+    Object.keys(raw).forEach(k => { scaled[k] = getScaledValue(raw[k], type, level); });
+
+    const hp = calcHP(scaled.sila, scaled.obrona, faction);
+    const sh = calcSH(scaled.obrona, faction);
+    const en = calcEN(scaled.inteligencja, faction);
+    const def_red = Math.round(scaled.obrona * 0.5);
+    const cc_red  = Math.round(scaled.foc * 0.5);
+
+    const derivedStats = [
+      { label: 'HP (Życie)',    val: hp,      max: 500, color: '#ef4444', icon: '❤️' },
+      { label: 'SH (Tarcza)',   val: sh,      max: 300, color: '#06b6d4', icon: '🛡' },
+      { label: 'EN (Energia)',  val: en,      max: 300, color: '#a855f7', icon: '⚡' },
+      { label: 'ATK',           val: scaled.atk, max: 150, color: '#f97316', icon: '⚔️' },
+      { label: 'DEF Redukcja',  val: def_red, max: 75,  color: '#22c55e', icon: '🛡' },
+      { label: 'SPD',           val: scaled.spd, max: 150, color: '#eab308', icon: '💨' },
+      { label: 'CC Redukcja',   val: cc_red,  max: 75,  color: '#8b5cf6', icon: '🧠' }
+    ];
+
+    setHTML('sb-derived', derivedStats.map(s => {
+      const pct = clamp(Math.round((s.val / s.max) * 100), 0, 100);
+      return `<div class="mb-2">
+        <div class="flex justify-between text-xs mb-1">
+          <span class="text-slate-400">${s.icon} ${s.label}</span>
+          <span class="font-bold" style="color:${s.color}">${s.val}</span>
+        </div>
+        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${pct}%;background:${s.color}"></div></div>
+      </div>`;
+    }).join(''));
+
+    setHTML('sb-secondary', `
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <div class="bg-slate-800/50 rounded p-2"><span class="text-slate-400">CRIT</span><br><span class="text-yellow-300 font-bold">5%</span></div>
+        <div class="bg-slate-800/50 rounded p-2"><span class="text-slate-400">Krytyk DMG</span><br><span class="text-yellow-300 font-bold">150%</span></div>
+        <div class="bg-slate-800/50 rounded p-2"><span class="text-slate-400">PEN</span><br><span class="text-orange-300 font-bold">0</span></div>
+        <div class="bg-slate-800/50 rounded p-2"><span class="text-slate-400">RES</span><br><span class="text-blue-300 font-bold">0</span></div>
+      </div>
+    `);
+
+    const factionStatColors = { valkyria: '#4f8ef7', maglander: '#a855f7', vanguard: '#22c55e', shadowflare: '#f97316' };
+    const factionStatDesc = {
+      valkyria:    'Morale: +ATK i +DEF gdy wysokie. Rośnie przy bohaterze i wygranych.',
+      maglander:   'Entropia: +Moce Astralne gdy wysokie. Rośnie przy portalach.',
+      vanguard:    'Stabilnosc: +Tarcze i Struktury gdy wysokie. Rośnie w formacji.',
+      shadowflare: 'Faza: +Unik i Fazowanie gdy wysokie. Rośnie w cieniu.'
+    };
+    setHTML('sb-faction-stat', `
+      <div class="bg-slate-800/50 rounded-lg p-2 border-l-2" style="border-color:${factionStatColors[faction]}">
+        <p class="text-xs font-bold mb-1" style="color:${factionStatColors[faction]}">${fc.uniqueStat}</p>
+        <p class="text-xs text-slate-400">${factionStatDesc[faction]}</p>
+        <p class="text-xs mt-1 text-slate-500">Energia: <span class="font-bold" style="color:${factionStatColors[faction]}">${fc.energy}</span></p>
+      </div>
+    `);
+
+    setHTML('sb-summary', `
+      <strong style="color:${fc.color}">${fc.icon} ${fc.name}</strong> | ${type === 'hero' ? 'Bohater' : type === 'unit' ? 'Jednostka' : 'Struktura'} Poz.${level}<br>
+      Mod. HP: ×${fc.hpMod} | Mod. EN: ×${fc.enMod} | Mod. SH: ×${fc.shMod}
+    `);
+
+    updateRadarChart(scaled, hp, sh, en, fc.color);
+  } catch(e) { console.error('updateSandbox error:', e); }
+}
+
+function updateRadarChart(scaled, hp, sh, en, color) {
+  try {
+    const ctx = document.getElementById('radarChart');
+    if (!ctx) return;
+
+    const data = [
+      clamp(Math.round(hp / 5), 0, 100),
+      clamp(Math.round(sh / 3), 0, 100),
+      clamp(Math.round(en / 3), 0, 100),
+      clamp(scaled.atk, 0, 100),
+      clamp(scaled.obrona, 0, 100),
+      clamp(scaled.spd, 0, 100),
+      clamp(scaled.ctrl, 0, 100),
+      clamp(scaled.foc, 0, 100)
+    ];
+
+    if (radarChart) { radarChart.destroy(); radarChart = null; }
+
+    radarChart = new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: ['HP', 'Tarcza', 'Energia', 'ATK', 'DEF', 'SPD', 'CTRL', 'FOC'],
+        datasets: [{
+          label: 'Statystyki',
+          data: data,
+          backgroundColor: color + '33',
+          borderColor: color,
+          borderWidth: 2,
+          pointBackgroundColor: color,
+          pointRadius: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          r: {
+            min: 0, max: 100,
+            ticks: { display: false },
+            grid: { color: 'rgba(255,255,255,0.1)' },
+            pointLabels: { color: '#94a3b8', font: { size: 10 } }
+          }
+        },
+        plugins: { legend: { display: false } }
+      }
+    });
+  } catch(e) { console.error('updateRadarChart error:', e); }
+}
+
+// ============================================================
+// COMBAT TAB
+// ============================================================
+function initCombatSliders() {
+  if (!document.getElementById('ca-sliders').innerHTML) {
+    buildSliders('ca-sliders', 'ca', BASE_ATTRS, 'updateCombatPreviews()');
+    buildSliders('cb-sliders', 'cb', BASE_ATTRS, 'updateCombatPreviews()');
+    ['obrona','foc'].forEach(id => {
+      const el = document.getElementById('cb-' + id);
+      if (el) { el.value = 60; document.getElementById('cb-' + id + '-val').textContent = 60; }
+    });
+  }
+}
+
+function getCombatUnit(prefix) {
+  try {
+    const faction = document.getElementById(prefix + '-faction').value;
+    const level   = parseInt(document.getElementById(prefix + '-level').value) || 1;
+    const raw     = getSliderVals(prefix);
+    const scaled  = {};
+    Object.keys(raw).forEach(k => { scaled[k] = getScaledValue(raw[k], 'hero', level); });
+    const hp = calcHP(scaled.sila, scaled.obrona, faction);
+    const sh = calcSH(scaled.obrona, faction);
+    const en = calcEN(scaled.inteligencja, faction);
+    return { faction, level, ...scaled, hp, sh, en, maxHp: hp, maxSh: sh };
+  } catch(e) { console.error('getCombatUnit error:', e); return null; }
+}
+
+function updateCombatPreviews() {
+  try {
+    ['ca','cb'].forEach(prefix => {
+      const lvlEl = document.getElementById(prefix + '-level');
+      const lvl = parseInt(lvlEl.value) || 1;
+      document.getElementById(prefix + '-level-val').textContent = lvl;
+      const u = getCombatUnit(prefix);
+      if (!u) return;
+      const fc = FACTION_CONFIG[u.faction];
+      const previewId = prefix + '-preview';
+      setHTML(previewId, `
+        <div class="grid grid-cols-3 gap-1 text-xs mt-2">
+          <div class="bg-slate-800/50 rounded p-1 text-center"><span class="text-red-400">HP</span><br><span class="font-bold text-white">${u.hp}</span></div>
+          <div class="bg-slate-800/50 rounded p-1 text-center"><span class="text-cyan-400">SH</span><br><span class="font-bold text-white">${u.sh}</span></div>
+          <div class="bg-slate-800/50 rounded p-1 text-center"><span class="text-orange-400">ATK</span><br><span class="font-bold text-white">${u.atk}</span></div>
+        </div>
+      `);
+    });
+  } catch(e) { console.error('updateCombatPreviews error:', e); }
+}
+
+function runCombat() {
+  if (combatRunning) return;
+  try {
+    combatRunning = true;
+    const uA = getCombatUnit('ca');
+    const uB = getCombatUnit('cb');
+    if (!uA || !uB) { combatRunning = false; return; }
+
+    const fcA = FACTION_CONFIG[uA.faction];
+    const fcB = FACTION_CONFIG[uB.faction];
+
+    let hpA = uA.hp, shA = uA.sh;
+    let hpB = uB.hp, shB = uB.sh;
+
+    const hpAHistory = [hpA];
+    const hpBHistory = [hpB];
+    const labels = ['Start'];
+    const log = [];
+
+    let turnA = true;
+    if (uB.spd > uA.spd) turnA = false;
+
+    let round = 0;
+    const maxRounds = 30;
+
+    while (hpA > 0 && hpB > 0 && round < maxRounds) {
+      round++;
+      const label = 'R' + round;
+
+      if (turnA) {
+        const { dmg, crit } = calcDamage(uA.atk, uB.obrona);
+        let actualDmg = dmg;
+        if (uB.faction === 'shadowflare' && Math.random() < 0.15) {
+          log.push(`<span class="text-orange-400">R${round}: Jednostka B unika ataku! (Faza)</span>`);
+          actualDmg = 0;
+        }
+        if (actualDmg > 0) {
+          if (shB > 0) {
+            const shDmg = Math.min(shB, actualDmg);
+            shB -= shDmg;
+            actualDmg -= shDmg;
+          }
+          hpB = Math.max(0, hpB - actualDmg);
+          const critTxt = crit ? ' <span class="text-yellow-300">KRYTYK!</span>' : '';
+          log.push(`<span class="text-blue-300">R${round}: A atakuje B — ${dmg} DMG${critTxt}</span>`);
+        }
+      } else {
+        const { dmg, crit } = calcDamage(uB.atk, uA.obrona);
+        let actualDmg = dmg;
+        if (actualDmg > 0) {
+          if (shA > 0) {
+            const shDmg = Math.min(shA, actualDmg);
+            shA -= shDmg;
+            actualDmg -= shDmg;
+          }
+          hpA = Math.max(0, hpA - actualDmg);
+          const critTxt = crit ? ' <span class="text-yellow-300">KRYTYK!</span>' : '';
+          log.push(`<span class="text-orange-300">R${round}: B atakuje A — ${dmg} DMG${critTxt}</span>`);
+        }
+      }
+
+      turnA = !turnA;
+      if (uA.spd > uB.spd * 1.3 && !turnA) { turnA = true; }
+      else if (uB.spd > uA.spd * 1.3 && turnA) { turnA = false; }
+
+      hpAHistory.push(Math.max(0, hpA));
+      hpBHistory.push(Math.max(0, hpB));
+      labels.push(label);
+
+      if (hpA <= 0 || hpB <= 0) break;
+    }
+
+    const hpAPct = clamp(Math.round((hpA / uA.maxHp) * 100), 0, 100);
+    const hpBPct = clamp(Math.round((hpB / uB.maxHp) * 100), 0, 100);
+    const shAPct = clamp(Math.round((shA / uA.maxSh) * 100), 0, 100);
+    const shBPct = clamp(Math.round((shB / uB.maxSh) * 100), 0, 100);
+
+    document.getElementById('ca-hp-bar').style.width = hpAPct + '%';
+    document.getElementById('cb-hp-bar').style.width = hpBPct + '%';
+    document.getElementById('ca-sh-bar').style.width = shAPct + '%';
+    document.getElementById('cb-sh-bar').style.width = shBPct + '%';
+    document.getElementById('ca-hp-text').textContent = hpA + '/' + uA.maxHp;
+    document.getElementById('cb-hp-text').textContent = hpB + '/' + uB.maxHp;
+    document.getElementById('ca-sh-text').textContent = shA + '/' + uA.maxSh;
+    document.getElementById('cb-sh-text').textContent = shB + '/' + uB.maxSh;
+
+    const resultEl = document.getElementById('combat-result');
+    resultEl.classList.remove('hidden');
+    if (hpA > 0 && hpB <= 0) {
+      resultEl.innerHTML = `<span style="color:${fcA.color}">🏆 ${fcA.name} (A) WYGRYWA!</span>`;
+    } else if (hpB > 0 && hpA <= 0) {
+      resultEl.innerHTML = `<span style="color:${fcB.color}">🏆 ${fcB.name} (B) WYGRYWA!</span>`;
+    } else {
+      resultEl.innerHTML = `<span class="text-yellow-300">⚖️ REMIS po ${maxRounds} rundach!</span>`;
+    }
+
+    setHTML('combat-log', log.slice(-20).join('<br>'));
+
+    updateCombatChart(labels, hpAHistory, hpBHistory, uA.maxHp, uB.maxHp, fcA.color, fcB.color);
+
+    combatRunning = false;
+  } catch(e) {
+    console.error('runCombat error:', e);
+    combatRunning = false;
+  }
+}
+
+function updateCombatChart(labels, dataA, dataB, maxA, maxB, colorA, colorB) {
+  try {
+    const ctx = document.getElementById('combatChart');
+    if (!ctx) return;
+    if (combatChart) { combatChart.destroy(); combatChart = null; }
+
+    combatChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'HP Jednostki A',
+            data: dataA,
+            borderColor: colorA,
+            backgroundColor: colorA + '22',
+            fill: true,
+            tension: 0.3,
+            pointRadius: 2
+          },
+          {
+            label: 'HP Jednostki B',
+            data: dataB,
+            borderColor: colorB,
+            backgroundColor: colorB + '22',
+            fill: true,
+            tension: 0.3,
+            pointRadius: 2
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: { min: 0, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { size: 10 } } },
+          x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { size: 9 }, maxTicksLimit: 10 } }
+        },
+        plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } }
+      }
+    });
+  } catch(e) { console.error('updateCombatChart error:', e); }
+}
+
+// ============================================================
+// FACTIONS TAB
+// ============================================================
+function updateFactionSim(faction) {
+  try {
+    if (faction === 'valkyria') {
+      const v = getVal('morale-slider');
+      document.getElementById('morale-val').textContent = v;
+      document.getElementById('morale-bonus').textContent = Math.round(v * 0.5);
+    } else if (faction === 'maglander') {
+      const v = getVal('entropy-slider');
+      document.getElementById('entropy-val').textContent = v;
+      document.getElementById('entropy-bonus').textContent = Math.round(v * 0.5);
+    } else if (faction === 'vanguard') {
+      const v = getVal('stability-slider');
+      document.getElementById('stability-val').textContent = v;
+      document.getElementById('stability-bonus').textContent = Math.round(v * 0.5);
+    } else if (faction === 'shadowflare') {
+      const v = getVal('phase-slider');
+      document.getElementById('phase-val').textContent = v;
+      document.getElementById('phase-bonus').textContent = Math.round(v * 0.5);
+      document.getElementById('phase-bonus2').textContent = Math.round(v * 0.25);
+    }
+  } catch(e) { console.error('updateFactionSim error:', e); }
+}
+
+function initFactionChart() {
+  try {
+    const ctx = document.getElementById('factionChart');
+    if (!ctx) return;
+    if (factionChart) { factionChart.destroy(); factionChart = null; }
+
+    const factions = ['Valkyria', 'Maglander', 'Vanguard', 'Shadowflare'];
+    const colors   = ['#4f8ef7', '#a855f7', '#22c55e', '#f97316'];
+
+    factionChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['HP Mod', 'EN Mod', 'SH Mod', 'Unik. Bonus'],
+        datasets: factions.map((name, i) => {
+          const fc = Object.values(FACTION_CONFIG)[i];
+          return {
+            label: name,
+            data: [fc.hpMod * 100, fc.enMod * 100, fc.shMod * 100, 100],
+            backgroundColor: colors[i] + '88',
+            borderColor: colors[i],
+            borderWidth: 1
+          };
+        })
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            min: 70, max: 150,
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            ticks: { color: '#94a3b8', font: { size: 10 }, callback: v => v + '%' }
+          },
+          x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { size: 10 } } }
+        },
+        plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } }
+      }
+    });
+  } catch(e) { console.error('initFactionChart error:', e); }
+}
+
+// ============================================================
+// SCALING TAB
+// ============================================================
+let currentScalingView = 'all';
+
+function setScalingView(view) {
+  currentScalingView = view;
+  initScalingChart();
+}
+
+function initScalingChart() {
+  try {
+    const ctx = document.getElementById('scalingChart');
+    if (!ctx) return;
+    if (scalingChart) { scalingChart.destroy(); scalingChart = null; }
+
+    const datasets = [];
+
+    if (currentScalingView === 'all' || currentScalingView === 'hero') {
+      const heroData = Array.from({length: 10}, (_, i) => Math.round(100 * (1 + 0.05 * i)));
+      datasets.push({
+        label: 'Bohater (+5%/poz)',
+        data: heroData,
+        borderColor: '#4f8ef7',
+        backgroundColor: '#4f8ef722',
+        fill: currentScalingView === 'hero',
+        tension: 0.3,
+        pointRadius: 4
+      });
+    }
+
+    if (currentScalingView === 'all' || currentScalingView === 'unit') {
+      const unitData = Array.from({length: 5}, (_, i) => Math.round(100 * (1 + 0.03 * i)));
+      datasets.push({
+        label: 'Jednostka (+3%/poz)',
+        data: unitData,
+        borderColor: '#22c55e',
+        backgroundColor: '#22c55e22',
+        fill: currentScalingView === 'unit',
+        tension: 0.3,
+        pointRadius: 4
+      });
+    }
+
+    if (currentScalingView === 'all' || currentScalingView === 'structure') {
+      const structData = Array.from({length: 3}, (_, i) => Math.round(100 * (1 + 0.10 * i)));
+      datasets.push({
+        label: 'Struktura (+10%/poz)',
+        data: structData,
+        borderColor: '#f97316',
+        backgroundColor: '#f9731622',
+        fill: currentScalingView === 'structure',
+        tension: 0.3,
+        pointRadius: 4
+      });
+    }
+
+    const maxLen = Math.max(...datasets.map(d => Array.isArray(d.data) ? d.data.length : 0));
+    const labels = Array.from({length: maxLen}, (_, i) => 'Poz.' + (i + 1));
+
+    scalingChart = new Chart(ctx, {
+      type: 'line',
+      data: { labels, datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            ticks: { color: '#94a3b8', font: { size: 10 }, callback: v => v + '%' }
+          },
+          x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { size: 10 } } }
+        },
+        plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } }
+      }
+    });
+  } catch(e) { console.error('initScalingChart error:', e); }
+}
+
+function updateScalingCalc() {
+  try {
+    const type  = document.getElementById('calc-type').value;
+    const base  = parseFloat(document.getElementById('calc-base').value) || 100;
+    const lvlEl = document.getElementById('calc-level');
+    const maxLvl = MAX_LEVELS[type] || 10;
+    lvlEl.max = maxLvl;
+    const level = clamp(parseInt(lvlEl.value), 1, maxLvl);
+    lvlEl.value = level;
+    document.getElementById('calc-level-val').textContent = level;
+
+    const rate   = SCALE_RATES[type] || 0.05;
+    const result = Math.round(base * (1 + rate * (level - 1)));
+    const bonus  = result - Math.round(base);
+    const pct    = Math.round(rate * (level - 1) * 100);
+
+    const typeColors = { hero: '#4f8ef7', unit: '#22c55e', structure: '#f97316' };
+    const color = typeColors[type] || '#60a5fa';
+
+    setHTML('scaling-result', `
+      <div class="flex justify-between text-sm mb-2">
+        <span class="text-slate-400">Wartość bazowa:</span>
+        <span class="font-bold text-white">${Math.round(base)}</span>
+      </div>
+      <div class="flex justify-between text-sm mb-2">
+        <span class="text-slate-400">Bonus skalowania:</span>
+        <span class="font-bold text-green-300">+${bonus} (+${pct}%)</span>
+      </div>
+      <div class="flex justify-between text-sm mb-2">
+        <span class="text-slate-400">Wartość końcowa:</span>
+        <span class="font-bold text-2xl" style="color:${color}">${result}</span>
+      </div>
+      <div class="stat-bar-bg mt-2">
+        <div class="stat-bar-fill" style="width:${clamp(Math.round((result/base/2)*100),0,100)}%;background:${color}"></div>
+      </div>
+    `);
+  } catch(e) { console.error('updateScalingCalc error:', e); }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    initSandbox();
+    console.log('Rift-Earth Simulator initialized successfully');
+  } catch(e) {
+    console.error('Init error:', e);
+  }
+});
+</script>
+
+</body>
+</html>
