@@ -3,60 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wszechstronni Start</title>
+    <title>Wszechstronni - Zarabianie, Nauka, Zabawa</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header class="site-header">
         <div class="container">
-            <h1>Wszechstronni Start</h1>
-            <p>Prosty początek dla ludzi, którzy zaczynają od zera.</p>
+            <h1>🌟 Wszechstronni</h1>
+            <p>Zarabianie • Nauka • Zabawa - wymieniaj doświadczenia jak zarabiać w internecie</p>
         </div>
     </header>
 
+    <nav class="site-nav">
+        <div class="container nav-content">
+            <button class="nav-btn active" onclick="switchTab('artykuly')">📝 Artykuły</button>
+            <button class="nav-btn" onclick="switchTab('narzedzia')">🛠️ Narzędzia</button>
+            <button class="nav-btn" onclick="switchTab('spolecznosc')">🧑‍🤝‍🧑 Społeczność</button>
+        </div>
+    </nav>
+
     <main class="container">
-        <section class="card">
-            <h2>Start od zera</h2>
-            <p>Najprostszy możliwy przewodnik, który usuwa chaos i pokazuje pierwszy krok.</p>
-            <button class="btn" onclick="openSection('start')">Otwórz</button>
-        </section>
-
-        <section class="card">
-            <h2>Moje testy</h2>
-            <p>Realne doświadczenia, bez ściemy. To, co naprawdę działa.</p>
-            <button class="btn" onclick="openSection('tests')">Otwórz</button>
-        </section>
-
-        <section class="card">
-            <h2>Narzędzia</h2>
-            <p>Proste, praktyczne mini‑narzędzia dla początkujących.</p>
-            <button class="btn" onclick="openSection('tools')">Otwórz</button>
-        </section>
-
-        <!-- Formularz sprawdzania kodów -->
-        <section class="card" id="code-check" style="margin-top: 32px;">
-            <h2>Sprawdź kod</h2>
-            <input id="codeInput" type="text" placeholder="Wpisz kod" class="input">
-            <div style="display:flex; gap:10px; margin-top:10px;">
-                <button class="btn" onclick="redeemCode()">Sprawdź</button>
-                <button class="btn ghost" onclick="clearCode()">Wyczyść</button>
+        
+        <!-- ========== TAB ARTYKUŁY ========== -->
+        <section id="tab-artykuly" class="tab-content active">
+            <div class="tab-header">
+                <h2>Moje Doświadczenia</h2>
+                <button class="btn btn-primary" onclick="openAddArticleModal()">+ Dodaj artykuł</button>
             </div>
-            <p id="result" class="result"></p>
-            <p class="hint">Uwaga: backend musi być uruchomiony w Termuxie, adres IP w skrypcie musi być aktualny.</p>
+
+            <div id="articles-list" class="articles-grid">
+                <!-- Artykuły będą tu załadowane -->
+            </div>
         </section>
+
+        <!-- ========== TAB NARZĘDZIA ========== -->
+        <section id="tab-narzedzia" class="tab-content">
+            <h2>Przydatne Narzędzia</h2>
+            <div id="tools-list" class="tools-grid">
+                <!-- Narzędzia będą tu załadowane -->
+            </div>
+        </section>
+
+        <!-- ========== TAB SPOŁECZNOŚĆ ========== -->
+        <section id="tab-spolecznosc" class="tab-content">
+            <h2>Posty Społeczności</h2>
+            <p style="color: #999; text-align: center; padding: 40px;">
+                🚀 Sekcja społeczności wkrótce!
+            </p>
+        </section>
+
     </main>
+
+    <!-- ========== MODAL DODAWANIA ARTYKUŁU ========== -->
+    <div id="addArticleModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeAddArticleModal()">✕</button>
+            <h3>Dodaj nowy artykuł</h3>
+            
+            <div class="form-group">
+                <label>Tytuł artykułu</label>
+                <input type="text" id="articleTitle" placeholder="np. Jak zarabiałem $500 na Fiverr" class="input">
+            </div>
+
+            <div class="form-group">
+                <label>Kategoria</label>
+                <select id="articleCategory" class="input">
+                    <option value="fiverr">💼 Fiverr</option>
+                    <option value="upwork">💼 Upwork</option>
+                    <option value="affiliates">💰 Linki afiliacyjne</option>
+                    <option value="blogging">✍️ Blogging</option>
+                    <option value="youtube">📺 YouTube</option>
+                    <option value="crypto">₿ Crypto</option>
+                    <option value="inne">📌 Inne</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Zawartość artykułu</label>
+                <textarea id="articleContent" placeholder="Napisz swoją historię, doświadczenia, co się udało..." class="textarea"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Link (opcjonalnie)</label>
+                <input type="url" id="articleLink" placeholder="np. https://fiverr.com/..." class="input">
+            </div>
+
+            <div class="form-actions">
+                <button class="btn btn-primary" onclick="saveArticle()">Opublikuj artykuł</button>
+                <button class="btn btn-secondary" onclick="closeAddArticleModal()">Anuluj</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL WIDOKU ARTYKUŁU ========== -->
+    <div id="articleModal" class="modal" style="display: none;">
+        <div class="modal-content modal-large">
+            <button class="modal-close" onclick="closeArticleModal()">✕</button>
+            
+            <div id="articleView">
+                <!-- Artykuł będzie tu wyświetlony -->
+            </div>
+        </div>
+    </div>
 
     <footer class="site-footer">
         <div class="container">
-            <small>Wszechstronni • Backend lokalny w Termuxie</small>
+            <small>© 2026 Wszechstronni - Platforma wymiany doświadczeń | v1.0</small>
         </div>
     </footer>
 
-    <!-- NOWY logger (dodany poprawnie) -->
     <script src="logger.js"></script>
-
-    <!-- Twój dotychczasowy skrypt -->
     <script src="app.js"></script>
 </body>
 </html>
